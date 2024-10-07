@@ -1,0 +1,910 @@
+// Layout Css
+.f_layout {
+  min-height: 1px;
+  overflow: hidden;
+  @include transition(all 0.5s);
+
+  &-content {
+    width: calc(100% - 200px);
+    flex: auto;
+    overflow: hidden;
+    min-height: 0;
+    background: $f_white;
+
+    // Content Main Header
+    &-header {
+      padding: 10px;
+      height: 50px;
+      background: $f_white;
+      border-bottom: 1px solid $f_stroke;
+
+      // Header User Profile
+      .f_header-user {
+        &-icon {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $f_white;
+          background-color: $f_primary-500;
+          border: 1px solid $f_stroke;
+          border-radius: 100%;
+          font-size: 13px;
+          font-weight: 600;
+          margin-right: 5px;
+        }
+      }
+
+      // Vertical Line
+      .f_header-line {
+        width: 2px;
+        height: 20px;
+        background-color: $f_neutrals-200;
+      }
+
+      // Breadcrumb Title and Icon
+      &-breadcrumb {
+        min-width: 260px;
+        max-width: 260px;
+
+        .f_backarrow {
+          margin-right: 10px;
+          width: 22px;
+          height: 22px;
+          border-radius: 4px;
+          background-color: $f_white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0px 0px 3px -2px rgba(0, 0, 0, 0.9);
+        }
+
+        h6 {
+          color: $f_neutrals-800;
+          margin: 0 0 0 10px;
+          font-size: 14px;
+          line-height: 18px;
+          font-weight: 600;
+        }
+
+        .ant-badge {
+          &-count {
+            margin-left: 10px;
+            background: $f_primary-500;
+            box-shadow: $f_primary-500 0px 0px 0px 1px;
+            color: $f_white;
+          }
+        }
+      }
+
+      // Search and Select Box
+      &-search {
+        min-width: 350px;
+      }
+    }
+
+    // Main Content
+    .f_content-main {
+      flex-grow: 1;
+      position: relative;
+      height: 100%;
+      background: $f_white;
+      overflow: hidden;
+
+      // Common Header
+      &-header {
+        padding: 0 10px;
+        height: 40px;
+        background-color: $f_white;
+        border-bottom: 1px solid $f_stroke;
+
+        h6 {
+          font-weight: 600;
+          color: $f_neutrals-800;
+          font-size: 14px;
+          margin-bottom: 0;
+        }
+      }
+
+      &-inner {
+        overflow: auto;
+        background: $f_neutrals-50;
+      }
+
+      &-pagination {
+        position: sticky;
+        bottom: 0px;
+        margin: 0;
+        background: $f_white;
+        z-index: 9;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        height: 40px;
+        padding: 0 10px;
+        // border-top: 1px solid $f_stroke;
+
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.f_sidebarsmall {
+    @include transition(width 0.2s ease-in-out);
+
+    .f_layout-content-header-breadcrumb {
+      padding-left: 20px;
+    }
+
+    .f_layout-content {
+      width: calc(100% - 70px);
+      @include transition(width 0.2s ease-in-out);
+    }
+
+    .f_sidebar {
+      width: 70px;
+      @include transition(width 0.2s ease-in-out);
+
+      .f_sidebar-drawer-icon {
+        position: absolute;
+        right: -15px;
+        z-index: 99;
+        background: $f_primary-500;
+        @include square(22px);
+        border-radius: 100px;
+
+        svg {
+          @include square(16px);
+
+          .f_stroke {
+            stroke: $f_white;
+          }
+        }
+
+      }
+
+      &-menu {
+        padding: 0 10px;
+
+        &-inner {
+          >a {
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+//Transaction Count Round
+.f_count-circle {
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 20px;
+  color: $f_white;
+  background: $f_primary-500;
+  padding: 0 4px;
+  border-radius: 100px;
+  height: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Only Icon Hover
+.f_icon-hover {
+  @include transition(all 0.5s);
+
+  &:hover {
+    @include transition(all 0.5s);
+
+    .f_fill {
+      fill: $f_primary-500;
+    }
+
+    .f_fill-stroke {
+      fill: $f_primary-500;
+      stroke: $f_primary-500;
+    }
+
+    .f_stroke {
+      stroke: $f_primary-500;
+    }
+  }
+}
+
+// All common Icon hover
+.f_icon-round-hover {
+  @include square(32px);
+  border-radius: 100%;
+  padding: 6px;
+  @include transition(all 0.5s);
+
+  .f_fill {
+    fill: $f_neutrals-600;
+  }
+
+  .f_fill-stroke {
+    fill: $f_neutrals-600;
+    stroke: $f_neutrals-600;
+  }
+
+  .f_stroke {
+    stroke: $f_neutrals-600;
+  }
+
+  &:hover,
+  &.f_hover-active {
+    @include transition(all 0.5s);
+    background-color: $f_primary-100;
+
+    .f_fill {
+      fill: $f_primary-500;
+    }
+
+    .f_fill-stroke {
+      fill: $f_primary-500;
+      stroke: $f_primary-500;
+    }
+
+    .f_stroke {
+      stroke: $f_primary-500;
+    }
+  }
+
+  &.f_disabled {
+    cursor: not-allowed;
+    background-color: $f_neutrals-100 !important;
+    opacity: 1;
+
+    .f_fill {
+      fill: $f_neutrals-400;
+    }
+
+    .f_fill-stroke {
+      fill: $f_neutrals-400;
+      stroke: $f_neutrals-400;
+    }
+
+    .f_stroke {
+      stroke: $f_neutrals-400;
+    }
+  }
+
+  &.f_icon-round-hover-green {
+    background-color: $f_success-500;
+
+    .f_fill {
+      fill: $f_white;
+    }
+
+    .f_fill-stroke {
+      fill: $f_white;
+      stroke: $f_white;
+    }
+
+    .f_stroke {
+      stroke: $f_white;
+    }
+  }
+}
+
+// Table Listing small Icon Hover
+.f_icon-small-hover {
+  @include square(26px);
+  border-radius: 100%;
+  padding: 4px;
+  @include transition(all 0.5s);
+
+  &.f_grid-small-icon {
+    @include square(22px);
+  }
+
+  .f_fill {
+    fill: $f_neutrals-600;
+  }
+
+  .f_fill-stroke {
+    fill: $f_neutrals-600;
+    stroke: $f_neutrals-600;
+  }
+
+  .f_stroke {
+    stroke: $f_neutrals-600;
+  }
+
+  &:hover,
+  &.f_icon-small-hover-active,
+  &.ant-popover-open {
+    @include transition(all 0.5s);
+    background-color: $f_primary-100;
+
+    .f_fill {
+      fill: $f_primary-500;
+    }
+
+    .f_fill-stroke {
+      fill: $f_primary-500;
+      stroke: $f_primary-500;
+    }
+
+    .f_stroke {
+      stroke: $f_primary-500;
+    }
+  }
+
+  &-delete {
+    .f_fill {
+      fill: $f_error-500;
+    }
+
+    &:hover {
+      background-color: $f_error-100;
+
+      .f_fill {
+        fill: $f_error-600;
+      }
+    }
+  }
+
+  &.f_disabled {
+    pointer-events: inherit;
+    cursor: not-allowed;
+    opacity: 1;
+    // background-color: $f_neutrals-100 !important;
+    background-color: inherit !important;
+
+    .f_fill {
+      fill: $f_neutrals-300;
+    }
+
+    .f_fill-stroke {
+      fill: $f_neutrals-300;
+      stroke: $f_neutrals-300;
+    }
+
+    .f_stroke {
+      stroke: $f_neutrals-300;
+    }
+  }
+
+  &.f_icon-small-hover-user {
+    border-radius: 4px;
+    background-color: $f_primary-500;
+
+    svg {
+      .f_fill {
+        fill: $f_white;
+      }
+    }
+  }
+}
+
+// Rollover icon with border table header icon
+.f_rollover {
+  @include square(28px);
+  border-radius: 4px;
+  border: 1px solid $f_neutrals-600;
+  background-color: $f_white;
+  @include transition(all 0.5s);
+
+  .f_fill {
+    fill: $f_neutrals-600;
+  }
+
+  .f_fill-stroke {
+    fill: $f_neutrals-600;
+    stroke: $f_neutrals-600;
+  }
+
+  .f_stroke {
+    stroke: $f_neutrals-600;
+  }
+
+  &:hover,
+  &.ant-tooltip-open,
+  &.f_hover-active,
+  &.ant-popover-open {
+    @include transition(all 0.5s);
+    background-color: $f_primary-500;
+    border-color: $f_primary-500;
+
+    .f_fill {
+      fill: $f_white;
+    }
+
+    .f_fill-stroke {
+      fill: $f_white;
+      stroke: $f_white;
+    }
+
+    .f_stroke {
+      stroke: $f_white;
+    }
+  }
+
+  &.f_disabled {
+    pointer-events: inherit;
+    cursor: not-allowed;
+    opacity: 1;
+    background-color: $f_neutrals-100 !important;
+    border-color: $f_neutrals-100 !important;
+
+    .f_fill {
+      fill: $f_neutrals-400;
+    }
+
+    .f_fill-stroke {
+      fill: $f_neutrals-400;
+      stroke: $f_neutrals-400;
+    }
+
+    .f_stroke {
+      stroke: $f_neutrals-400;
+    }
+  }
+
+  &.f_filter-active {
+    border-color: $f_primary-500 !important;
+    background-color: $f_white !important;
+
+    .f_fill {
+      fill: $f_primary-500 !important;
+    }
+  }
+
+  &.f_rollover-delete {
+    background-color: $f_error-50;
+    border-color: $f_error-500;
+
+    .f_fill {
+      fill: $f_error-500;
+    }
+
+    &:hover {
+      background-color: $f_error-100;
+      border-color: $f_error-500;
+
+      .f_fill {
+        fill: $f_error-600;
+      }
+    }
+  }
+}
+
+.f_rollover-icon {
+  @include square(28px);
+  border-radius: 4px;
+  border: 1px solid $f_neutrals-600;
+  background-color: $f_white;
+  @include transition(all 0.5s);
+
+  &:hover,
+  &.ant-tooltip-open,
+  &.f_hover-active,
+  &.ant-popover-open {
+    @include transition(all 0.5s);
+    background-color: $f_neutrals-100;
+    border-color: $f_primary-500;
+  }
+
+}
+
+// Common Popover
+.ant-popover {
+  &.f_common-popover {
+    .ant-popover-inner {
+      background-color: $f_white;
+      border-radius: 4px;
+      padding: 5px;
+
+      .ant-popover-inner-content {
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+
+          li {
+            font-size: 13px;
+            color: $f_neutrals-600;
+            line-height: 1;
+            font-weight: 400;
+            padding: 8px 12px;
+            border-radius: 4px;
+            @include transition(all 0.5s);
+
+            a {
+              color: $f_neutrals-600;
+              font-size: 13px;
+              line-height: 1.2;
+              font-weight: 400;
+              @include transition(all 0.5s);
+            }
+
+            // Table Filter
+            .ant-checkbox-wrapper {
+              display: flex;
+              align-items: center;
+
+              span {
+                color: $f_neutrals-600;
+                font-size: 13px;
+                line-height: 18px;
+                font-weight: 400;
+                @include transition(all 0.5s);
+              }
+            }
+
+            &.f_clear-filter {
+              background-color: $f_error-50;
+              color: $f_error-500;
+            }
+
+            &:hover {
+              @include transition(all 0.5s);
+              background-color: $f_primary-50;
+              color: $f_primary-500;
+
+              a {
+                @include transition(all 0.5s);
+                color: $f_primary-500;
+              }
+
+              .ant-checkbox-wrapper {
+                span {
+                  color: $f_primary-500;
+                  @include transition(all 0.5s);
+                }
+              }
+
+              &.f_clear-filter {
+                @include transition(all 0.5s);
+                background-color: $f_error-100;
+                color: $f_error-600;
+              }
+            }
+
+            &.f_active {
+              background-color: $f_primary-100;
+              color: $f_primary-500;
+
+              a {
+                color: $f_primary-500;
+              }
+            }
+
+            &.f_disabled {
+              pointer-events: none;
+              cursor: not-allowed;
+              opacity: 1;
+              background-color: $f_neutrals-100 !important;
+              color: $f_neutrals-400;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Common Dropdown
+.ant-dropdown {
+  &.f_common-dropdown {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 5px;
+      background-color: $f_white;
+      border-radius: 4px;
+      padding: 5px;
+      box-shadow:
+        0 6px 16px 0 rgba(0, 0, 0, 0.08),
+        0 3px 6px -4px rgba(0, 0, 0, 0.12),
+        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+      li {
+        font-size: 13px;
+        color: $f_neutrals-600;
+        line-height: 1;
+        font-weight: 400;
+        padding: 8px 12px;
+        border-radius: 4px;
+        @include transition(all 0.5s);
+
+        a {
+          color: $f_neutrals-600;
+          font-size: 13px;
+          line-height: 1.2;
+          font-weight: 400;
+          @include transition(all 0.5s);
+        }
+
+        // Table Filter
+        .ant-checkbox-wrapper {
+          display: flex;
+          align-items: center;
+
+          span {
+            color: $f_neutrals-600;
+            font-size: 13px;
+            line-height: 18px;
+            font-weight: 400;
+            @include transition(all 0.5s);
+          }
+        }
+
+        &.f_clear-filter {
+          background-color: $f_error-50;
+          color: $f_error-500;
+        }
+
+        &:hover {
+          @include transition(all 0.5s);
+          background-color: $f_primary-50;
+          color: $f_primary-500;
+
+          a {
+            @include transition(all 0.5s);
+            color: $f_primary-500;
+          }
+
+          .ant-checkbox-wrapper {
+            span {
+              color: $f_primary-500;
+              @include transition(all 0.5s);
+            }
+          }
+
+          &.f_clear-filter {
+            @include transition(all 0.5s);
+            background-color: $f_error-100;
+            color: $f_error-600;
+          }
+        }
+
+        &.f_active {
+          background-color: $f_primary-100;
+          color: $f_primary-500;
+
+          a {
+            color: $f_primary-500;
+          }
+        }
+
+        &.f_disabled {
+          pointer-events: none;
+          cursor: not-allowed;
+          opacity: 1;
+          background-color: $f_neutrals-100 !important;
+          color: $f_neutrals-400;
+        }
+      }
+    }
+  }
+}
+
+// Common Ant Drawer
+.ant-drawer {
+  .ant-drawer-header {
+    padding: 10px;
+    min-height: 50px;
+    border-bottom: 1px solid $f_stroke;
+    background-color: $f_neutrals-50;
+
+    .ant-drawer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $f_neutrals-800;
+    }
+
+    .ant-drawer-close {
+      font-size: 16px;
+      box-shadow: none !important;
+      outline: none;
+      background-color: $f_error-50;
+      @include square(28px);
+
+      .anticon {
+        font-size: 16px;
+        color: $f_error-500;
+      }
+
+      &:hover {
+        background-color: $f_error-100;
+
+        .anticon {
+          color: $f_error-500;
+        }
+      }
+    }
+  }
+
+  // app invoice Item Drawer Css
+  .ant-drawer-footer {
+    padding: 10px;
+    min-height: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $f_stroke;
+    background-color: $f_neutrals-50;
+  }
+
+  .ant-drawer-inheader {
+    background: $f_neutrals-50;
+    padding: 10px;
+    border-bottom: 1px solid $f_stroke;
+    border-top: 1px solid $f_stroke;
+
+    h6 {
+      font-weight: 600;
+      color: $f_neutrals-800;
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-drawer-body {
+    padding: 0;
+  }
+}
+
+// Pagination Css
+.ant-pagination {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+
+  .ant-pagination &-item,
+  .ant-pagination &-jump-prev,
+  .ant-pagination &-jump-next {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $f_stroke;
+    background-color: $f_white;
+    @include transition(all 0.5s);
+
+    &-active,
+    &:hover {
+      background-color: $f_primary-50 !important;
+      color: $f_primary-500;
+      border-color: $f_primary-500;
+      @include transition(all 0.5s);
+    }
+  }
+
+  .ant-pagination &-jump-prev,
+  .ant-pagination &-jump-next {
+    width: 30px;
+
+    .ant-pagination-item-link {
+      width: 100%;
+    }
+  }
+
+  .ant-pagination &-prev,
+  .ant-pagination &-next {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $f_stroke;
+    background-color: $f_white;
+    @include transition(all 0.5s);
+
+    .ant-pagination-item-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent !important;
+      border-radius: 0;
+    }
+
+    &:hover {
+      background-color: $f_primary-50;
+      color: $f_primary-500;
+      border-color: $f_primary-500;
+      @include transition(all 0.5s);
+    }
+  }
+
+  .ant-pagination &-disabled {
+    border: 1px solid $f_stroke !important;
+    color: $f_neutrals-400 !important;
+    pointer-events: inherit;
+    cursor: not-allowed;
+    opacity: 1;
+    background-color: $f_neutrals-100 !important;
+  }
+
+  .ant-pagination &-options {
+    width: 100%;
+    margin-left: 10px;
+  }
+
+  .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    height: auto !important;
+  }
+}
+
+// Back button
+.f_back-button {
+  background-color: $f_white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 3px -1px rgba(0, 0, 0, 0.9);
+  width: 22px;
+  height: 22px;
+  @include transition(all 0.5s);
+
+  &:hover {
+    background: $f_primary-500;
+    @include transition(all 0.5s);
+
+    .f_fill {
+      @include transition(all 0.5s);
+      fill: $f_white;
+    }
+  }
+}
+
+.f_white-box {
+  background: $f_white;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.09);
+  border-radius: 4px;
+  // border: 1px solid $f_stroke;
+  overflow: hidden;
+}
+
+// tooltip
+.ant-tooltip {
+  &-content {
+
+    p,
+    a {
+      color: $f_white;
+      font-weight: 400;
+      font-size: 12px;
+    }
+  }
+}
+
+//notify
+.ant-notification {
+  font-family: "Inter";
+
+  .ant-notification-notice-wrapper {
+    .ant-notification-notice {
+      padding: 15px;
+
+      .ant-notification-notice-content {
+        .ant-notification-notice-message {
+          margin-bottom: 0;
+          font-family: "Inter";
+          padding-right: 20px;
+          margin-left: 35px;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+
+      .ant-notification-notice-close {
+        top: 15px;
+        font-size: 18px;
+        right: 15px;
+      }
+    }
+  }
+}

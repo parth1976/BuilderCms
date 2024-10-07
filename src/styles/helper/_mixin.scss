@@ -1,0 +1,160 @@
+/* Font Styles */
+@mixin defaultFontStyle($fontWeight: null,
+	$fontSize: null,
+	$lineHeight: null,
+	$color: null) {
+	font: normal $fontWeight (
+		$fontSize) + px / ($lineHeight) + px "Inter", sans-serif;
+	color: $color;
+}
+
+/* Meadia fonts */
+@mixin mediaFontStyle($fontSize: null, $lineHeight: null) {
+	font-size: ($fontSize) + px;
+	line-height: ($lineHeight) + px;
+}
+
+/* Box Shadow */
+@mixin box-shadow {
+	box-shadow: 0px 0px 10px 0px rgba(26, 72, 211, 0.3
+	);
+}
+
+/* Background Opacity */
+@mixin backgroundOpacity($bgColor, $opacity: null) {
+	background: rgba($bgColor, $opacity);
+}
+
+/* Transition */
+@mixin transition($transition...) {
+	-webkit-transition: $transition;
+	-moz-transition: $transition;
+	-o-transition: $transition;
+	-ms-transition: $transition;
+	transition: $transition;
+}
+
+/* Width and height */
+@mixin square($pixels: null) {
+	width: $pixels;
+	height: $pixels;
+}
+
+/* Content - Before, After */
+@mixin content {
+	content: "";
+	position: absolute;
+}
+
+// Media Queries
+@mixin mediaQuery($point) {
+	@media screen and (max-width: $point) {
+		@content;
+	}
+}
+
+// Grid box
+@for $i from 1 through 12 {
+  .f_col-#{$i} {
+    flex: 0 0 calc($i/12) * 100%;
+    max-width: calc($i/12) * 100%;
+    padding: 0 10px;
+  }
+}
+
+// Margin and Padding
+@for $i from 0 through 100 {
+	.f_m-#{$i} {
+		$margin: $i * 1px;
+		margin: $margin !important;
+	}
+
+	.f_mt-#{$i} {
+		$margin: $i * 1px;
+		margin-top: $margin !important;
+	}
+
+	.f_mr-#{$i} {
+		$margin: $i * 1px;
+		margin-right: $margin !important;
+	}
+
+	.f_mb-#{$i} {
+		$margin: $i * 1px;
+		margin-bottom: $margin !important;
+	}
+
+	.f_ml-#{$i} {
+		$margin: $i * 1px;
+		margin-left: $margin !important;
+	}
+
+	.f_p-#{$i} {
+		$padding: $i * 1px;
+		padding: $padding !important;
+	}
+
+	.f_pt-#{$i} {
+		$padding: $i * 1px;
+		padding-top: $padding !important;
+	}
+
+	.f_pr-#{$i} {
+		$padding: $i * 1px;
+		padding-right: $padding !important;
+	}
+
+	.f_pb-#{$i} {
+		$padding: $i * 1px;
+		padding-bottom: $padding !important;
+	}
+
+	.f_pl-#{$i} {
+		$padding: $i * 1px;
+		padding-left: $padding !important;
+	}
+
+	.f_py-#{$i} {
+		$padding: $i * 1px;
+		padding-top: $padding ;
+		padding-bottom: $padding !important;
+	}
+
+	.f_px-#{$i} {
+		$padding: $i * 1px;
+		padding-left: $padding !important;
+		padding-right: $padding !important;
+	}
+}
+
+// width Percentage
+@for $i from 0 through 100 {
+	.f_w-#{$i} {
+		$width: $i * 1%;
+		width: $width !important;
+	}
+}
+
+// Height Pixel
+@for $i from 0 through 100 {
+	.f_h-#{$i} {
+		$height: $i * 1px;
+		height: $height !important;
+	}
+}
+
+// font-size
+@for $i from 0 through 100 {
+  .f_fs-#{$i} {
+    $fontSize: $i * 1px;
+    font-size: $fontSize;
+  }
+}
+
+//font-weight
+@for $i from 1 through 10 {
+  .f_fw-#{$i * 100} {
+    $boldness: $i * 100;
+    font-weight: $boldness !important;
+  }
+}

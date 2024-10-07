@@ -1,0 +1,30 @@
+.f_viewparty {
+    background: #FAFAFA;
+
+    &-header {
+        background-color: #F8F9FA;
+        border-bottom: 1px solid $f_stroke;
+        padding: 8px 10px 8px 10px;
+        border-radius: 5px 5px 0 0;
+
+        h6 {
+            @include defaultFontStyle(600, 16, 18, $f_neutrals-800);
+
+            span {
+                color: $f_primary-500;
+                margin-left: 5px;
+                font-weight: 700;
+            }
+        }
+    }
+
+    &-bg {
+        border-radius: 5px;
+        border: 1px solid #E4E6E9;
+        box-shadow: 0px 0px 20px 0px #0000000D;
+
+        .ant-table-wrapper .ant-table-thead>tr>th {
+            top: -10px;
+        }
+    }
+}

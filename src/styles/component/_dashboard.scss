@@ -1,0 +1,71 @@
+.f_dashboard {
+    padding: 20px 10px 0;
+
+    &-bg {
+        border-radius: 5px;
+        box-shadow: 0px 0px 20px 0px #0000000D;
+        background-color: $f_white;
+    }
+
+    &-header {
+        height: 40px;
+        border-bottom: 1px solid $f_stroke;
+        padding: 10px;
+        border-radius: 5px 5px 0 0;
+
+        h6 {
+            @include defaultFontStyle(500, 16, 18, #16161A);
+        }
+    }
+
+    &-content {
+        overflow: hidden;
+        height: 100%;
+
+        .f_listing-antd-table {
+            height: 682px;
+            max-height: 682px;
+            overflow: hidden;
+            overflow-y: auto;
+
+            .f_ant-table-summary-fixed {
+                td {
+                    background-color: $f_neutrals-50 !important;
+                }
+            }
+        }
+    }
+
+    &-overview {
+        border-radius: 5px;
+        box-shadow: 0px 0px 20px 0px #0000000D;
+        background-color: $f_white;
+        padding: 10px;
+        align-items: center;
+        display: flex;
+        justify-content: flex-start;
+
+        &-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            @include square(40px);
+            background-color: #F8DFE2;
+            border-radius: 100px;
+        }
+
+        &-content {
+            margin-left: 10px;
+
+            h6 {
+                margin-bottom: 4px;
+                @include defaultFontStyle(600, 16, 22, #000);
+                opacity: 0.8;
+            }
+
+            p {
+                @include defaultFontStyle(500, 14, 16, #8B909A);
+            }
+        }
+    }
+}

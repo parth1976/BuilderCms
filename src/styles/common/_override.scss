@@ -1,0 +1,38 @@
+//custom scrollbar css
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* total width */
+::-webkit-scrollbar {
+  background-color: $f_white;
+  width: 6px;
+}
+
+/* background of the scrollbar except button or resizer */
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color: transparent;
+}
+
+/* scrollbar itself */
+::-webkit-scrollbar-thumb {
+  background-color: $f_neutrals-300;
+  border-radius: 16px;
+  border: 6px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: $f_neutrals-400;
+  border: 6px solid $f_neutrals-400;
+}
+
+/* set button(top and bottom of the scrollbar) */
+::-webkit-scrollbar-button {
+  display: none;
+}

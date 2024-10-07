@@ -1,0 +1,94 @@
+.f_sidebar {
+  background-color: $f_white;
+  width: 200px;
+  border-right: 1px solid $f_stroke;
+  @include transition(width 0.2s ease-in-out);
+
+  &-logo {
+    height: 50px;
+    margin-bottom: 0px;
+    position: relative;
+  }
+
+  &-menu {
+    height: calc(100vh - 50px);
+    overflow: hidden;
+    overflow-y: auto;
+    padding: 20px;
+
+    &-inner {
+      position: relative;
+      list-style: none;
+      border-radius: 10px;
+      margin-bottom: 10px;
+
+
+      &-icon {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .f_fill-stroke {
+          fill: $f_neutrals-400;
+          stroke: $f_neutrals-400;
+        }
+
+        .f_stroke {
+          stroke: $f_neutrals-400;
+        }
+
+        .f_fill {
+          fill: $f_neutrals-400;
+        }
+      }
+
+      >a {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+        padding: 8px 10px;
+      }
+
+      &-name {
+        color: $f_neutrals-400;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.2;
+        margin-left: 10px;
+        white-space: nowrap;
+      }
+
+      &:hover,
+      &.f_menu-active,
+      &.ant-popover-open {
+        background-color: #F3F1FF;
+
+        .f_sidebar-menu-inner-name {
+          color: $f_primary-500;
+        }
+
+        .f_sidebar-menu-inner-icon {
+          .f_fill-stroke {
+            fill: $f_primary-500;
+            stroke: $f_primary-500;
+          }
+
+          .f_stroke {
+            stroke: $f_primary-500;
+          }
+
+          .f_fill {
+            fill: $f_primary-500;
+          }
+        }
+      }
+    }
+
+    &::-webkit-scrollbar {
+      background-color: $f_primary-900;
+    }
+  }
+}

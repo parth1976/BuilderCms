@@ -1,0 +1,59 @@
+.ant-btn {
+  @include transition(all 0.5s);
+
+  &.ant-btn-dangerous {
+    background-color: $f_error-50;
+    border-color: $f_error-500;
+    color: $f_error-500;
+
+    .f_fill {
+      fill: $f_error-500;
+    }
+
+    &:hover,
+    &:active,
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      background-color: $f_error-100 !important;
+      border-color: $f_error-500 !important;
+      color: $f_error-600 !important;
+
+      .f_fill {
+        fill: $f_error-600;
+      }
+    }
+  }
+
+  &.ant-btn-link {
+    color: $f_primary-500;
+
+    &:hover,
+    &:active,
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      color: $f_primary-600 !important;
+    }
+  }
+
+  &:hover {
+    @include transition(all 0.5s);
+  }
+}
+
+// All Button Disabled
+.ant-btn:disabled {
+  .f_fill {
+    fill: $f_neutrals-400;
+  }
+
+  .f_fill-stroke {
+    fill: $f_neutrals-400;
+    stroke: $f_neutrals-400;
+  }
+
+  .f_stroke {
+    stroke: $f_neutrals-400;
+  }
+}

@@ -1,0 +1,125 @@
+// All MOdal Css
+.ant-modal {
+  .ant-modal-title {
+    @include defaultFontStyle(600, 14, 28, $f_neutrals-800);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+  .ant-modal-header {
+    padding: 10px;
+    @include defaultFontStyle(600, 12, 28, $f_neutrals-800);
+    border-bottom: 1px solid $f_stroke;
+    border-radius: 5px 5px 0 0;
+    margin: 0;
+    min-height: 50px;
+    background-color: $f_neutrals-50;
+
+    .f_layout-common-search {
+      .ant-input {
+        height: 28px;
+        padding-left: 30px;
+      }
+
+      .ant-input-group-addon {
+        .ant-btn {
+          width: 30px;
+          height: 28px;
+
+          .anticon {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .ant-modal-body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .ant-modal-close {
+    background-color: $f_error-50;
+    @include square(28px);
+    top: 10px;
+    right: 10px;
+
+    .anticon {
+      font-size: 16px;
+      color: $f_error-500;
+    }
+
+    &:hover {
+      background-color: $f_error-100;
+
+      .anticon {
+        color: $f_error-500;
+      }
+    }
+  }
+
+  .ant-modal-footer {
+    padding: 10px;
+    @include defaultFontStyle(500, 12, 28, $f_neutrals-800);
+    text-align: right;
+    background-color: $f_neutrals-50;
+    border-top: 1px solid $f_stroke;
+    border-radius: 0 0 5px 5px;
+    margin: 0;
+    min-height: 50px;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .ant-modal-content {
+    position: relative;
+    background-color: $f_white;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: 5px;
+    box-shadow:
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: auto;
+    padding: 0;
+  }
+}
+
+// Delete Confirm Modal
+.f_delete-confirm {
+  .ant-btn-primary.ant-btn-dangerous,
+  .ant-btn-dangerous,
+  .ant-btn-primary {
+    background-color: $f_error-50;
+    border-color: $f_error-500;
+    color: $f_error-500;
+
+    .f_fill {
+      fill: $f_error-500;
+    }
+
+    &:hover,
+    &:active,
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      background-color: $f_error-100 !important;
+      border-color: $f_error-500 !important;
+      color: $f_error-600 !important;
+
+      .f_fill {
+        fill: $f_error-600;
+      }
+    }
+  }
+
+  .ant-modal-footer {
+    border-top: 0 !important;
+  }
+}

@@ -1,0 +1,21 @@
+/* Helpers */
+@import "styles/helper/fontFamily.scss"; /* fontFamily */
+@import "styles/helper/mixin"; /* Variables */
+@import "styles/helper/variable"; /* Mixins */
+
+// /* Common */
+@import "styles/common/override"; /* Override */
+@import "styles/common/common"; /* Common */
+@import "styles/common/commonClass"; /* Common Class*/
+@import "styles/common/sidebar"; /* sidebar */
+@import "styles/common/search"; /* search */
+@import "styles/common/layout"; /* layout */
+@import "styles/common/table"; /* table */
+@import "styles/common/modal"; /* modal */
+@import "styles/common/button"; /* button */
+@import "styles/common/page-not-found"; /* page-not-found Page */
+@import "styles/common/login"; /* login */
+
+/* Components */
+@import 'styles/component/party-details';
+@import 'styles/component/dashboard';

@@ -1,0 +1,120 @@
+// Search Css
+.f_layout-common-search {
+  &.ant-input-group-wrapper {
+    .ant-input-wrapper {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .ant-input-affix-wrapper {
+      background-color: unset;
+      border: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      outline: none !important;
+      box-shadow: none !important;
+
+      &::before {
+        display: none !important;
+      }
+    }
+
+    .ant-input {
+      border: 1px solid $f_stroke;
+      padding: 5px 35px 5px 35px;
+      font-size: 13px;
+      color: $f_neutrals-700;
+      border-radius: 4px !important;
+      width: 100%;
+      font-weight: 500;
+      box-shadow: none !important;
+      height: 32px;
+      transition: none;
+      background-color: $f_white;
+
+      &:hover,
+      &:focus,
+      &:focus-visible,
+      &:focus-within {
+        border-color: $f_primary-500;
+      }
+
+      &:hover ~ .ant-input-group-addon .ant-btn svg,
+      &:focus ~ .ant-input-group-addon .ant-btn svg,
+      &:focus-visible ~ .ant-input-group-addon .ant-btn svg,
+      &:focus-within ~ .ant-input-group-addon .ant-btn svg {
+        fill: $f_primary-500;
+      }
+    }
+
+    .ant-input-suffix {
+      background-color: unset;
+      margin-left: 0;
+
+      .anticon-close-circle {
+        border: none;
+        position: absolute;
+        left: auto;
+        right: 0;
+        top: 0;
+        width: 40px;
+        background: transparent;
+        height: 31px;
+        z-index: 1;
+        transition: none;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          fill: $f_neutrals-700;
+        }
+
+        &:hover {
+          svg {
+            fill: $f_neutrals-500;
+          }
+        }
+      }
+    }
+
+    .ant-input-group-addon {
+      background-color: transparent;
+
+      .ant-btn {
+        border: none;
+        position: absolute;
+        right: auto;
+        left: auto;
+        top: 0;
+        width: 40px;
+        background: transparent;
+        height: 32px;
+        z-index: 1;
+        transition: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::after {
+          display: none;
+        }
+
+        .anticon-search {
+          font-size: 16px;
+        }
+
+        svg {
+          fill: $f_neutrals-700;
+        }
+
+        &:hover {
+          svg {
+            fill: $f_primary-500;
+          }
+        }
+      }
+    }
+  }
+}

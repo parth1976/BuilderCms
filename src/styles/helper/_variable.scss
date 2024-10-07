@@ -1,0 +1,130 @@
+/* Responsive View variables - Breakpoints for Media Query */
+$smallMobile: 320px;
+$mobileSmall: 375px;
+$mobile: 481px;
+$mobileLarge: 576px;
+$ipad: 768px;
+$large: 991px;
+$extraLarge: 1200px;
+$desktop: 1366px;
+$desktopLarge: 1430px;
+$desktopXLarge: 1600px;
+$desktopXXLarge: 1800px;
+
+// SCSS Color Variables
+
+// Primary Color
+$f_primary-50: #F2F1FF;
+$f_primary-100: #D9D5FF;
+$f_primary-200: #CCC7FF;
+$f_primary-300: #B2AAFF;
+$f_primary-400: #998EFF;
+$f_primary-500: #7F72FF;
+$f_primary-600: #675BDB;
+$f_primary-700: #4F44B6;
+$f_primary-800: #372E92;
+$f_primary-900: #2B2280;
+
+// Secondary Color
+$f_secondary-50: #f2fbff;
+$f_secondary-100: #ccf1ff;
+$f_secondary-200: #a6e6ff;
+$f_secondary-300: #73d8fe;
+$f_secondary-400: #4dcdfe;
+$f_secondary-500: #01b8fe;
+$f_secondary-600: #01a9e9;
+$f_secondary-700: #017ba9;
+$f_secondary-800: #004d6a;
+$f_secondary-900: #001f2a;
+
+// Success Color
+$f_success-50: #f4fbf7;
+$f_success-100: #d2efe0;
+$f_success-200: #b0e3c9;
+$f_success-300: #8ed7b3;
+$f_success-400: #6ccb9c;
+$f_success-500: #359766;
+$f_success-600: #318a5e;
+$f_success-700: #28714d;
+$f_success-800: #1b4c33;
+$f_success-900: #123222;
+
+// Warning Color
+$f_warning-50: #fffbf6;
+$f_warning-100: #ffefdc;
+$f_warning-200: #ffe2c1;
+$f_warning-300: #ffd6a7;
+$f_warning-400: #ffb867;
+$f_warning-500: #ffad4f;
+$f_warning-600: #ff9c2b;
+$f_warning-700: #fb8600;
+$f_warning-800: #a75900;
+$f_warning-900: #532d00;
+
+// Caution Color
+$f_caution-50: #fffae6;
+$f_caution-100: #fff5cc;
+$f_caution-200: #fff0b3;
+$f_caution-300: #ffeb99;
+$f_caution-400: #ffe066;
+$f_caution-500: #ffd633;
+$f_caution-600: #ffcc00;
+$f_caution-700: #cca300;
+$f_caution-800: #997a00;
+$f_caution-900: #665200;
+
+// Error Color
+$f_error-50: #fdf4f5;
+$f_error-100: #f6d4d8;
+$f_error-200: #f0b3ba;
+$f_error-300: #ea929d;
+$f_error-400: #e3727f;
+$f_error-500: #d1293d;
+$f_error-600: #c02638;
+$f_error-700: #9d1f2e;
+$f_error-800: #7a1824;
+$f_error-900: #571119;
+
+// Neutrals Color
+$f_neutrals-50: #f8f9fa;
+$f_neutrals-100: #e3e5eb;
+$f_neutrals-200: #ced2dc;
+$f_neutrals-300: #b9becd;
+$f_neutrals-400: #a4abbd;
+$f_neutrals-500: #737d9a;
+$f_neutrals-600: #5e6782;
+$f_neutrals-700: #383e4e;
+$f_neutrals-800: #1c1f27;
+$f_neutrals-900: #090a0d;
+
+// Dark Mode Color
+$f_dark-50: #3f3e49;
+$f_dark-100: #3c3b47;
+$f_dark-200: #3a3944;
+$f_dark-300: #353540;
+$f_dark-400: #33323e;
+$f_dark-500: #2f2e3a;
+$f_dark-600: #2c2b37;
+$f_dark-700: #2a2935;
+$f_dark-800: #252431;
+$f_dark-900: #1a1926;
+
+// Functional Color
+$f_functional-50: #f7f0ff;
+$f_functional-100: #eee0ff;
+$f_functional-200: #e6d1ff;
+$f_functional-300: #ddc2ff;
+$f_functional-400: #cda3ff;
+$f_functional-500: #bc85ff;
+$f_functional-600: #ab66ff;
+$f_functional-700: #8e52d8;
+$f_functional-800: #723db1;
+$f_functional-900: #55298b;
+
+// Other Color
+$f_white: #ffffff;
+$f_black: #000000;
+$f_stroke: #e4e6e9;
+$f_sidebarHover: #192440;
+$f_linear_1: linear-gradient(313deg, #01407e 0%, #010f38 100%);
+$f_linear_2: linear-gradient(180deg, #e8f3ff 0%, #f4f9ff 100%);

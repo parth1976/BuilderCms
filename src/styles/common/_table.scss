@@ -1,0 +1,380 @@
+// All Antd Table
+.ant-table-wrapper {
+  .ant-table {
+    border-radius: 0;
+
+    &-thead {
+      >tr {
+        >th {
+          &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+            display: none;
+          }
+
+          padding: 8px;
+          height: 40px;
+          position: sticky;
+          top: 0px;
+          z-index: 2;
+          background: $f_neutrals-50;
+          font-weight: 600;
+          font-size: 11px;
+          line-height: 1.6;
+          color: $f_neutrals-600;
+          border-radius: 0px;
+          border-bottom: 1px solid $f_stroke;
+          white-space: nowrap;
+          border-color: $f_stroke !important;
+
+          &.ant-table-column-has-sorters {
+            &:hover {
+              background: $f_neutrals-50;
+            }
+          }
+
+          .ant-table-filter-column {
+            justify-content: flex-start;
+
+            .ant-table-column-title {
+              font-size: 11px;
+              flex: 0;
+            }
+          }
+        }
+
+        &:first-child {
+          th {
+            &:first-child {
+              padding-left: 15px;
+            }
+
+            &:last-child {
+              padding-right: 15px;
+              text-align: center;
+            }
+          }
+        }
+
+        .ant-table-cell-fix-left,
+        .ant-table-cell-fix-right {
+          z-index: 3;
+        }
+
+        &.f_draft {
+          th {
+            &:first-child {
+              padding-left: 25px;
+            }
+          }
+        }
+      }
+    }
+
+    &-tbody {
+      >tr {
+        >td {
+          padding: 6px 8px;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 1.6;
+          color: $f_neutrals-700;
+          border-bottom: 1px solid $f_stroke;
+          height: 40px;
+          word-break: break-all;
+          border-color: $f_stroke !important;
+
+          &:first-child {
+            padding-left: 15px;
+          }
+
+          &:last-child {
+            padding-right: 15px;
+            text-align: center;
+          }
+
+          &.ant-table-cell-row-hover {
+            background-color: $f_neutrals-50;
+          }
+
+          &.f_disabled {
+            pointer-events: inherit;
+            cursor: not-allowed;
+            opacity: 1;
+            // background-color: $f_neutrals-100 !important;
+            background-color: inherit !important;
+
+            .f_fill {
+              fill: $f_neutrals-300;
+            }
+
+            .f_fill-stroke {
+              fill: $f_neutrals-300;
+              stroke: $f_neutrals-300;
+            }
+
+            .f_stroke {
+              stroke: $f_neutrals-300;
+            }
+          }
+        }
+
+        &.ant-table-row {
+          &:hover {
+            td {
+              background-color: $f_primary-50;
+              cursor: pointer;
+            }
+          }
+        }
+
+        // Role Expan Table
+        &.ant-table-expanded-row {
+          >td {
+            padding: 0px;
+
+            .f_table-in-table {
+              border: 1px solid $f_stroke;
+              margin: 10px;
+
+              .ant-table {
+                margin: 0;
+
+                &-thead {
+                  >tr {
+                    >th {
+                      padding: 10px;
+                      height: auto;
+                      position: unset;
+                      background: $f_neutrals-100;
+                      font-weight: 600;
+                      font-size: 11px;
+                      line-height: 1.6;
+                      color: $f_neutrals-600;
+                      border-radius: 0px;
+                      border-bottom: 1px solid $f_stroke;
+                      border-color: $f_stroke !important;
+                    }
+                  }
+                }
+
+                &-tbody {
+                  >tr {
+                    >td {
+                      padding: 8px;
+                      font-weight: 500;
+                      font-size: 12px;
+                      line-height: 1.6;
+                      color: $f_neutrals-700;
+                      border-bottom: 1px solid $f_stroke;
+                      border-color: $f_stroke;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &.ant-table-row-selected {
+          >td {
+            background: $f_primary-100 !important;
+            border-color: rgba(0, 0, 0, 0.03);
+          }
+        }
+
+        &.f_draft {
+          td {
+            &:first-child {
+              padding-left: 25px;
+              overflow: hidden;
+              position: relative;
+
+              .f_draft-ribbon {
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 1;
+                width: 25px;
+                height: 40px;
+                text-align: right;
+
+                span {
+                  font-size: 9px;
+                  font-weight: 500;
+                  color: $f_white;
+                  text-transform: uppercase;
+                  text-align: center;
+                  line-height: 12px;
+                  transform: rotate(-45deg);
+                  letter-spacing: 0.5px;
+                  width: 53px;
+                  display: block;
+                  background: $f_neutrals-600;
+                  box-shadow: 0 3px 10px -5px $f_black;
+                  position: absolute;
+                  top: 8px;
+                  left: -13px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &-summary {
+      background-color: $f_neutrals-50;
+
+      tr {
+        td {
+          font-weight: 600;
+          color: $f_neutrals-900;
+          height: 40px;
+          padding: 6px 8px;
+        }
+
+        &.f_ant-table-summary-fixed {
+          td {
+            position: sticky;
+            top: auto;
+            bottom: 0;
+            z-index: 2;
+            background-color: $f_primary-50;
+          }
+        }
+      }
+    }
+  }
+}
+
+// All Antd Tag
+.ant-tag {
+  border: 0;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0.2px;
+  margin: 0;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  // justify-content: center;
+
+  &-success,
+  &.ant-tag-green {
+    background-color: $f_success-50;
+    color: $f_success-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_success-500;
+    }
+  }
+
+  &.f_draft {
+    background-color: $f_neutrals-50;
+    color: $f_neutrals-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_neutrals-500;
+    }
+  }
+
+  &.f_audit-tag {
+    padding: 0px 4px;
+    height: 20px;
+  }
+
+  &.push_tally_tag {
+    background: $f_secondary-50;
+    color: $f_secondary-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_secondary-500;
+    }
+  }
+
+  &.processing_tag,
+  &.ant-tag-blue {
+    background: $f_primary-50;
+    color: $f_primary-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_primary-500;
+    }
+  }
+
+  &-error,
+  &.ant-tag-red {
+    background-color: $f_error-50;
+    color: $f_error-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_error-500;
+    }
+  }
+
+  &-warning,
+  &.ant-tag-orange {
+    background-color: $f_warning-50;
+    color: $f_warning-500;
+
+    &.f_header-tag {
+      border: 1px solid $f_warning-500;
+    }
+  }
+
+  &.ant-tag-yellow {
+    background-color: $f_caution-50;
+    color: $f_caution-700;
+
+    &.f_header-tag {
+      border: 1px solid $f_caution-700;
+    }
+  }
+}
+
+// Common Label Start
+label {
+  color: $f_neutrals-700;
+  font-size: 13px;
+  line-height: 20px;
+  display: inline-flex;
+  // width: 100%;
+  font-weight: 500;
+  margin-bottom: 5px;
+
+  .f_required-cell {
+    color: $f_error-500;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.f_required-cell {
+  color: $f_error-500;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ant-form-item {
+  .ant-form-item-label {
+    padding: 0;
+
+    label {
+      color: $f_neutrals-700;
+      font-size: 13px;
+      line-height: 20px;
+      display: inline-flex;
+      // width: 100%;
+      font-weight: 500;
+      margin-bottom: 5px;
+      height: auto !important;
+    }
+  }
+}
+
+.ant-form-item-explain-error {
+  font-weight: 500;
+  font-size: 12px;
+  color: $f_error-500;
+}
