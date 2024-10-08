@@ -1,1 +1,1 @@
-export const BASE_URL = "https://buildercms.onrender.com/"
+export const BASE_URL = "https://buildercms.onrender.com"
