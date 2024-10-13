@@ -458,7 +458,7 @@ const PartyView = () => {
                         maxLength={10}
                       />
                     </Form.Item>
-                    <Tooltip title="Add Mobile" placement='bottom'><Button type='default' className='f_flex f_align-center f_content-center f_cp f_ml-10 f_mt-20'><F_PlusIcon width='14px' height='14px' fill='#7F72FF' /></Button></Tooltip>
+                    {/* <Tooltip title="Add Mobile" placement='bottom'><Button type='default' className='f_flex f_align-center f_content-center f_cp f_ml-10 f_mt-20'><F_PlusIcon width='14px' height='14px' fill='#7F72FF' /></Button></Tooltip> */}
                   </div>
                 </Col>
                 <Col span={24} sm={12} md={6} xl={6} xxl={4}>
