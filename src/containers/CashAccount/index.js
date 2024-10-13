@@ -33,7 +33,7 @@ const CashAccount = () => {
   const [selectedTransType, setSelectedTransType] = useState([]);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [selectedPartyId, setSelectedPartyId] = useState('')
-
+  const [counts, setCounts] = useState('')
   const transOptions = [
     { value: 2, label: "Credit" },
     { value: 1, label: "Debit" },
@@ -100,7 +100,7 @@ const CashAccount = () => {
   }, [window?.location?.pathname]);
 
   useEffect(() => {
-    if (selectedCompany?._id) {      
+    if (selectedCompany?._id) {
       setFilter((prevFilter) => ({
         ...prevFilter,
         filter: {
@@ -119,6 +119,20 @@ const CashAccount = () => {
       .then((res) => {
         setData(res.data.list);
         settotalPages(res?.data?.count)
+        fetchTotals();
+      })
+      .catch((err) => {
+        notify("error", "Failed to fetch data", err.message);
+      });
+  }
+
+  const fetchTotals = () => {
+    const body = { ...filter }
+    delete body.page
+    delete body.limit
+    callAPI("POST", `${BASE_URL}/user/account/getAccountSums`, body)
+      .then((res) => {
+        setCounts(res?.data)
       })
       .catch((err) => {
         notify("error", "Failed to fetch data", err.message);
@@ -410,7 +424,7 @@ const CashAccount = () => {
         </div>
         <div className="f_flex f_align-center f_content-center">
           <div className='f_ml-10'>
-            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
           </div>
           <div className='f_ml-10'>
             <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
@@ -430,16 +444,18 @@ const CashAccount = () => {
           pagination={false}
           className='f_listing-antd-table'
           rowSelection={rowSelection}
-        // summary={() => (
-        //   <Table.Summary fixed>
-        //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
-        //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={4}>Total:</Table.Summary.Cell>
-        //       <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹ 10,000</span></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={2}></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={3}></Table.Summary.Cell>
-        //     </Table.Summary.Row>
-        //   </Table.Summary>
-        // )}
+          summary={() => (
+            <Table.Summary fixed>
+              <Table.Summary.Row className='f_ant-table-summary-fixed'>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={2}>Total:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalBalance}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={2} colSpan={1}>Debit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={3}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalDebit}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={4} colSpan={1}>Credit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={5}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalCredit}</span></Table.Summary.Cell>
+              </Table.Summary.Row>
+            </Table.Summary>
+          )}
         />
       </div>
 

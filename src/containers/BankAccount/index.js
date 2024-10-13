@@ -31,6 +31,7 @@ const BankAccount = () => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [selectedTransType, setSelectedTransType] = useState([]);
+  const [counts, setCounts] = useState('')
 
   const transOptions = [
     { value: TRANSACTION_CONSTANTS.CREDIT, label: "Credit" },
@@ -61,7 +62,7 @@ const BankAccount = () => {
   const [data, setData] = React.useState('');
 
   useEffect(() => {
-    if (selectedCompany?._id) {      
+    if (selectedCompany?._id) {
       setFilter((prevFilter) => ({
         ...prevFilter,
         filter: {
@@ -80,6 +81,20 @@ const BankAccount = () => {
       .then((res) => {
         setData(res.data.list);
         settotalPages(res?.data?.count)
+        fetchTotals();
+      })
+      .catch((err) => {
+        notify("error", "Failed to fetch data", err.message);
+      });
+  }
+
+  const fetchTotals = () => {
+    const body = { ...filter }
+    delete body.page
+    delete body.limit
+    callAPI("POST", `${BASE_URL}/user/account/getAccountSums`, body)
+      .then((res) => {
+        setCounts(res?.data)
       })
       .catch((err) => {
         notify("error", "Failed to fetch data", err.message);
@@ -329,7 +344,7 @@ const BankAccount = () => {
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Transaction Type</span>
         <Popover placement="bottomRight" overlayClassName="f_common-popover" content={content()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedTransType.length > 0 ? '#184ecf' : '#5e6782'}/></span>
+          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedTransType.length > 0 ? '#184ecf' : '#5e6782'} /></span>
         </Popover></div>,
       id: "status",
       key: "status",
@@ -470,17 +485,18 @@ const BankAccount = () => {
           pagination={false}
           className='f_listing-antd-table'
           rowSelection={rowSelection}
-        // summary={() => (
-        //   <Table.Summary fixed>
-        //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
-        //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={4}>Total:</Table.Summary.Cell>
-        //       <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹ 10,000</span></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={2}></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={3}></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={4}></Table.Summary.Cell>
-        //     </Table.Summary.Row>
-        //   </Table.Summary>
-        // )}
+          summary={() => (
+            <Table.Summary fixed>
+              <Table.Summary.Row className='f_ant-table-summary-fixed'>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={2}>Total:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalBalance}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={2} colSpan={1}>Debit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={3}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalDebit}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={4} colSpan={1}>Credit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={5}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalCredit}</span></Table.Summary.Cell>
+              </Table.Summary.Row>
+            </Table.Summary>
+          )}
         />
       </div>
 

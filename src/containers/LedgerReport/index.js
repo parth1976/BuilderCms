@@ -307,12 +307,6 @@ const LedgerReport = () => {
       render: (x) => moment(x).format('DD/MM/YYYY')
     },
     {
-      title: 'Total Payment',
-      dataIndex: 'payment',
-      id: 'payment',
-      key: 'payment',
-    },
-    {
       title: <div className='f_flex f_align-center f_content-start'><span>Payment Mode</span></div>,
       dataIndex: 'paymentMode',
       id: 'paymentMode',
@@ -415,7 +409,30 @@ const LedgerReport = () => {
   const handleDownloadFile = (isPdf = false) => {
     const body = {
       data: formatData(ledgerData?.accountDetails),
-      columns: ["date", "payment" , "paymentMode" , "transactionType" , "narration"]
+      columns: [
+        {
+          header: 'Date',
+          key: 'date',
+          width: 20,
+        },
+        {
+          header: 'Payment',
+          key: 'payment',
+          width: 20,
+        },{
+          header: 'Payment Mode',
+          key: 'paymentMode',
+          width: 20,
+        },{
+          header: 'Transaction Type',
+          key: 'transactionType',
+          width: 20,
+        },{
+          header: 'Narration',
+          key: 'narration',
+          width: 20,
+        },
+      ]
     }
     let url = !isPdf ? 'download-xls' : 'download-pdf';
     axios

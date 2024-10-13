@@ -16,6 +16,7 @@ const Next10Days = () => {
     page: 1,
     limit: 20,
   })
+  const [counts, setCounts] = useState('')
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -39,6 +40,7 @@ const Next10Days = () => {
     callAPI("POST", `${BASE_URL}/user/payment/paginate`, body)
       .then((res) => {
         setData(res.data.list);
+        setCounts(res?.data?.totals)
       })
       .catch((err) => {
         notify("error", "Failed to fetch data", err.message);
@@ -169,14 +171,14 @@ const Next10Days = () => {
             dataSource={data}
             pagination={false}
             className='f_listing-antd-table'
-            // summary={() => (
-            //   <Table.Summary fixed>
-            //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
-            //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={5}>Total:</Table.Summary.Cell>
-            //       <Table.Summary.Cell className="f_text-right f_fw-600" index={1}><span className='f_color-primary-500 '>₹ 10,000</span></Table.Summary.Cell>
-            //     </Table.Summary.Row>
-            //   </Table.Summary>
-            // )}
+            summary={() => (
+              <Table.Summary fixed>
+                <Table.Summary.Row className='f_ant-table-summary-fixed'>
+                  <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={5}>Total:</Table.Summary.Cell>
+                  <Table.Summary.Cell className="f_text-right f_fw-600" index={1}><span className='f_color-primary-500 '>{counts?.totalAmount || 0}</span></Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            )}
           />
         </div>
       </div>

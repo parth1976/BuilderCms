@@ -94,7 +94,7 @@ const Reminder = () => {
 
 
   const [data, setData] = React.useState('');
-
+  const [counts, setCounts] = useState('')
   useEffect(() => {
     if (selectedCompany?._id) {
       setFilter((prevFilter) => ({
@@ -113,6 +113,7 @@ const Reminder = () => {
       .then((res) => {
         setData(res.data.list);
         settotalPages(res?.data?.count)
+        setCounts(res?.data?.totals)
       })
       .catch((err) => {
         notify("error", "Failed to fetch data", err.message);
@@ -280,7 +281,7 @@ const Reminder = () => {
     }
     else if (code === 5) {
       text = 'Late Paid';
-      classname = "ant-tag-orange"
+      classname = "ant-tag-error"
     }
     return <Tag color={color} className={classname}>{text}</Tag>
   }
@@ -627,18 +628,20 @@ const Reminder = () => {
           dataSource={data}
           pagination={false}
           className='f_listing-antd-table'
-        // rowSelection={rowSelection}
-        // summary={() => (
-        //   <Table.Summary fixed>
-        //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
-        //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={8}>Total:</Table.Summary.Cell>
-        //       <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹ 10,000</span></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={2}></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={3}></Table.Summary.Cell>
-        //       <Table.Summary.Cell index={4}></Table.Summary.Cell>
-        //     </Table.Summary.Row>
-        //   </Table.Summary>
-        // )}
+          // rowSelection={rowSelection}
+          summary={() => (
+            <Table.Summary fixed>
+              <Table.Summary.Row className='f_ant-table-summary-fixed'>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={5}>Total:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalAmount}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={2} colSpan={1}>Debit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={3}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalDebit}</span></Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-right f_fw-600" index={4} colSpan={1}>Credit:</Table.Summary.Cell>
+                <Table.Summary.Cell className="f_text-left f_fw-600" index={5}><span className='f_color-primary-500 f_ml-5'>₹{counts?.totalCredit}</span></Table.Summary.Cell>
+                <Table.Summary.Cell index={2}></Table.Summary.Cell>
+              </Table.Summary.Row>
+            </Table.Summary>
+          )}
         />
       </div>
 
