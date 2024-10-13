@@ -143,6 +143,9 @@ const PartyView = () => {
     } else if (code === 3) {
       text = 'Advanced';
       classname = "processing_tag"
+    }else if (code === 5) {
+      text = 'Late Paid';
+      classname = "ant-tag-error"
     }
     return <Tag color={color} className={classname}>{text}</Tag>
   }
@@ -245,7 +248,14 @@ const PartyView = () => {
         return (
           <div className='f_flex f_align-center f_content-center'>
             <Tooltip placement="bottom" title={'Edit'}>
-              <span className="f_cp f_icon-small-hover f_flex f_align-center f_content-center f_mr-5" onClick={() => { setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props?._id); }}><F_EditIcon width='14px' height='14px' /></span>
+              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center f_mr-5 ${props?.isPaid ? 'f_disabled' : ""}`}
+               onClick={(e) => { 
+                if(props?.isPaid){
+                  e.stopPropagation();
+                }else{
+                  setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props?._id); }}
+                }
+                ><F_EditIcon width='14px' height='14px' /></span>
             </Tooltip>
             <Tooltip placement="bottom" title={'Delete'}>
               <span className="f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_mr-5" onClick={() => { setDeleteConfirm(true); setSelctedPaymentId(props?._id); }}><F_DeleteIcon width='14px' height='14px' /></span>
@@ -521,7 +531,7 @@ const PartyView = () => {
                       placeholder='Enter Your Payment'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -536,7 +546,7 @@ const PartyView = () => {
                       placeholder='Enter Your Down Payment'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -551,7 +561,7 @@ const PartyView = () => {
                       placeholder='Enter Your Month'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -566,7 +576,7 @@ const PartyView = () => {
                       placeholder='Enter Your Regular EMI'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -584,7 +594,7 @@ const PartyView = () => {
                       placeholder="Select Regular Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ regularTenure: e }); handleChange(); }}
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -602,7 +612,7 @@ const PartyView = () => {
                       placeholder="Select Regular Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ regularReminderDate: e }); }}
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -617,7 +627,7 @@ const PartyView = () => {
                       placeholder='Enter Your Master EMI'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -635,7 +645,7 @@ const PartyView = () => {
                       placeholder="Select Master Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ masterTenure: e }); handleChange(); }}
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -653,7 +663,7 @@ const PartyView = () => {
                       placeholder="Select date"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ masterReminderDate: e }); }}
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -668,7 +678,7 @@ const PartyView = () => {
                       placeholder='Enter Your Remaining Payment'
                       autoComplete='off'
                       type='number'
-                      disabled = {partyId}
+                      disabled={partyId}
                     />
                   </Form.Item>
                 </Col>
