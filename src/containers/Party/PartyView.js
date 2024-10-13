@@ -303,9 +303,10 @@ const PartyView = () => {
       });
   }
 
-  const downloadFile = async (id, fileName) => {
+  const downloadFile = async (isPdf = false) => {
+    let url = !isPdf ? 'download-xls' : 'download-pdf';
     axios
-      .post(`${BASE_URL}/user/payment/download-xls`, { filter: { partyId } }, {
+      .post(`${BASE_URL}/user/payment/${url}`, { filter: { partyId } }, {
         responseType: "arraybuffer",
         headers: {
           Authorization: "Bearer " + UtilLocalService.getLocalStorage(TOKEN_KEY),
@@ -313,12 +314,12 @@ const PartyView = () => {
       })
       .then((response) => {
         var blob = new Blob([response.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type: isPdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", houseNumber);
+        link.setAttribute("download", isPdf ? `${houseNumber}.pdf` : `${houseNumber}.xlsx`);
         document.body.appendChild(link);
         link.click();
       });
@@ -520,6 +521,7 @@ const PartyView = () => {
                       placeholder='Enter Your Payment'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -534,6 +536,7 @@ const PartyView = () => {
                       placeholder='Enter Your Down Payment'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -548,6 +551,7 @@ const PartyView = () => {
                       placeholder='Enter Your Month'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -562,6 +566,7 @@ const PartyView = () => {
                       placeholder='Enter Your Regular EMI'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -579,6 +584,7 @@ const PartyView = () => {
                       placeholder="Select Regular Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ regularTenure: e }); handleChange(); }}
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -596,6 +602,7 @@ const PartyView = () => {
                       placeholder="Select Regular Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ regularReminderDate: e }); }}
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -610,6 +617,7 @@ const PartyView = () => {
                       placeholder='Enter Your Master EMI'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -627,6 +635,7 @@ const PartyView = () => {
                       placeholder="Select Master Tenure"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ masterTenure: e }); handleChange(); }}
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -644,6 +653,7 @@ const PartyView = () => {
                       placeholder="Select date"
                       size="large"
                       onChange={(e) => { form.setFieldsValue({ masterReminderDate: e }); }}
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -658,6 +668,7 @@ const PartyView = () => {
                       placeholder='Enter Your Remaining Payment'
                       autoComplete='off'
                       type='number'
+                      disabled = {partyId}
                     />
                   </Form.Item>
                 </Col>
@@ -713,14 +724,13 @@ const PartyView = () => {
                 <Button type="primary" className="f_flex f_align-center f_content-center" onClick={() => setIsVisibleModal(true)}><F_PlusIcon width='12px' height='12px' fill='#fff' /> Add</Button>
               </div>
               <div className='f_ml-10'>
-                <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+                <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
               </div>
               <div className='f_ml-10'>
                 <Tooltip title="Download Excel" placement='bottom' oncl><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
               </div>
             </div>
           </div>
-
           <div className='f_viewparty-content'>
             <Table columns={partyViewList}
               dataSource={finalData}

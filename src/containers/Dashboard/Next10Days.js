@@ -17,10 +17,12 @@ const Next10Days = () => {
     limit: 20,
   })
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (selectedCompany?._id) {
       const today = moment().format("YYYY-MM-DD");
-      setFilter({
+      setFilter((prevFilter) => ({
+        ...prevFilter, 
         filter: {
           fileId: selectedCompany._id,
           reminderDate: {
@@ -28,8 +30,7 @@ const Next10Days = () => {
             endDate: today,
           },
         },
-        ...filter,
-      });
+      }));
     }
   }, [selectedCompany]);
 

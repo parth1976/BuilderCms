@@ -11,8 +11,7 @@ import { useSelector } from 'react-redux';
 const Dashboard = () => {
   const [finalHeight, setFinalHeight] = useState("");
   const selectedCompany = useSelector((state) => state.files.selectedCompanyData)
-  const [filter, setFilter] = useState({
-  })
+  const [filter, setFilter] = useState({})
   const [data, setData] = useState('')
 
   useEffect(() => {
@@ -21,14 +20,15 @@ const Dashboard = () => {
     setFinalHeight(mainHeight);
   }, [window?.location?.pathname]);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (selectedCompany?._id) {
-      setFilter({
-        fileId: selectedCompany?._id,
-        ...filter
-      })
+      
+      setFilter((prevFilter) => ({
+        ...prevFilter,      // Use the most recent value of filter
+        fileId: selectedCompany?._id
+      }));
     }
-  }, [selectedCompany])
+  }, [selectedCompany]);
 
   const fetchData = () => {
     const body = { ...filter }

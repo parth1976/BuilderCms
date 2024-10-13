@@ -15,13 +15,13 @@ const TotalBalance = () => {
         filter: 1,
     })
     useEffect(() => {
-        if (selectedCompany?._id) {
-            setFilter({
-                fileId: selectedCompany?._id,
-                ...filter
-            })
+        if (selectedCompany?._id) {      
+          setFilter((prevFilter) => ({
+            ...prevFilter,
+            fileId: selectedCompany?._id
+          }));
         }
-    }, [selectedCompany])
+      }, [selectedCompany]);
 
     const fetchData = () => {
         const body = { ...filter }

@@ -3,9 +3,10 @@ import { Input, Tooltip, Table, Pagination, Checkbox, Tag, Popover, DatePicker, 
 import { F_DeleteIcon, F_DownloadExcelIcon, F_DownloadPdfIcon, F_EditIcon, F_EyeIcon, F_FilterIcon, F_PlusIcon } from "../../Icons";
 import { useSelector } from 'react-redux';
 import { callAPI } from '../../utils/api';
-import { BASE_URL, PAYMENT_MODE, TRANSACTION_CONSTANTS } from '../../constanats';
-import { notify } from '../../utils/localServiceUtil';
+import { BASE_URL, PAYMENT_MODE, TOKEN_KEY, TRANSACTION_CONSTANTS } from '../../constanats';
+import UtilLocalService, { notify } from '../../utils/localServiceUtil';
 import moment from 'moment';
+import axios from 'axios';
 
 const { RangePicker } = DatePicker;
 
@@ -36,14 +37,14 @@ const LedgerReport = () => {
 
   useEffect(() => {
     if (selectedCompany?._id) {
-      setFilter({
-        ...filter,
+      setFilter((prevFilter) => ({
+        ...prevFilter,
         filter: {
           fileId: selectedCompany?._id,
-        }
-      })
+        },
+      }));
     }
-  }, [selectedCompany])
+  }, [selectedCompany]);
 
   const fetchData = () => {
     const body = { ...filter }
@@ -299,10 +300,7 @@ const LedgerReport = () => {
       )
     },
     {
-      title: <div className='f_flex f_align-center f_content-start'><span>Date</span>
-        <Popover placement="bottom" overlayClassName="f_common-popover" content={handleFilterDatePopover()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+      title: <div className='f_flex f_align-center f_content-start'><span>Date</span></div>,
       dataIndex: 'date',
       id: 'date',
       key: 'date',
@@ -315,10 +313,7 @@ const LedgerReport = () => {
       key: 'payment',
     },
     {
-      title: <div className='f_flex f_align-center f_content-start'><span>Payment Mode</span>
-        <Popover placement="bottom" overlayClassName="f_common-popover" content={handleFilterPaymentPopover()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+      title: <div className='f_flex f_align-center f_content-start'><span>Payment Mode</span></div>,
       dataIndex: 'paymentMode',
       id: 'paymentMode',
       key: 'paymentMode',
@@ -346,11 +341,7 @@ const LedgerReport = () => {
       },
     },
     {
-      title: <div className='f_flex f_align-center f_content-start'><span>Transaction Type</span>
-        <Popover placement="bottom" overlayClassName="f_common-popover" content={handleFilterPopover()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
-      dataIndex: 'paymentMode',
+      title: <div className='f_flex f_align-center f_content-start'><span>Transaction Type</span></div>,
       dataIndex: 'transactionType',
       id: 'transactionType',
       key: 'transactionType',
@@ -362,23 +353,94 @@ const LedgerReport = () => {
         )
       },
     },
-    // {
-    //   title: 'Narration',
-    //   dataIndex: 'narration',
-    //   id: 'narration',
-    //   key: 'narration',
-    //   className: 'f_text-left',
-    //   render: (x, props) => {
-    //     return (
-    //       <>
-    //         {
-    //           <span className='f_two-line'>{x}</span>
-    //         }
-    //       </>
-    //     )
-    //   },
-    // },
+    {
+      title: 'Narration',
+      dataIndex: 'narration',
+      id: 'narration',
+      key: 'narration',
+      className: 'f_text-left',
+      render: (x, props) => {
+        return (
+          <>
+            {
+              <span className='f_two-line'>{x}</span>
+            }
+          </>
+        )
+      },
+    },
   ]
+
+  const formatData = (data) => {
+    return data.map(item => {
+      return {
+        ...item,
+        date: moment(item.date).format('DD/MM/YYYY'), // Format date
+        paymentMode: item.paymentMode === PAYMENT_MODE.CASH
+          ? "Cash"
+          : item.paymentMode === PAYMENT_MODE.CHAQUE
+          ? "Cheque"
+          : "e-Transfer", // Map payment mode
+        transactionType: `${item.transactionType === TRANSACTION_CONSTANTS.CREDIT ? "Credit" : "Debit"}` // Map transaction type
+      };
+    });
+  };
+
+  const downloadFile = async (isPdf = false) => {
+    let url = !isPdf ? 'download-xls' : 'download-pdf';
+    axios
+      .post(`${BASE_URL}/user/account/ledger-report/${url}`, filter, {
+        responseType: "arraybuffer",
+        headers: {
+          Authorization: "Bearer " + UtilLocalService.getLocalStorage(TOKEN_KEY),
+        },
+      })
+      .then((response) => {
+        var blob = new Blob([response.data], {
+          type: isPdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", isPdf ? "ledger_report.pdf" : "ledger_report.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("File download failed:", error);
+      });
+  };
+
+  const handleDownloadFile = (isPdf = false) => {
+    const body = {
+      data: formatData(ledgerData?.accountDetails),
+      columns: ["date", "payment" , "paymentMode" , "transactionType" , "narration"]
+    }
+    let url = !isPdf ? 'download-xls' : 'download-pdf';
+    axios
+      .post(`${BASE_URL}/user/dashboard/${url}`, body, {
+        responseType: "arraybuffer",
+        headers: {
+          Authorization: "Bearer " + UtilLocalService.getLocalStorage(TOKEN_KEY),
+        },
+      })
+      .then((response) => {
+        var blob = new Blob([response.data], {
+          type: isPdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", isPdf ? `${ledgerData?.ownerName}.pdf` :  `${ledgerData?.ownerName}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("File download failed:", error);
+      });
+  }
 
   return (
     <React.Fragment>
@@ -417,10 +479,10 @@ const LedgerReport = () => {
         </div>
         <div className="f_flex f_align-center f_content-center">
           <div className='f_ml-10'>
-            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
           </div>
           <div className='f_ml-10'>
-            <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
+            <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
           </div>
           {/* <div className='f_ml-10'>
             <Button type="primary" className="f_flex f_align-center f_content-center" onClick={() => setIsVisibleCreateModal(true)}><F_PlusIcon width='12px' height='12px' fill='#fff' /> Create Account</Button>
@@ -468,13 +530,13 @@ const LedgerReport = () => {
 
       {visibleModal && <Drawer
         title={<div className='f_flex f_align-center f_content-between'>
-          <h6 className='f_fw-600'>Vijay</h6>
+          <h6 className='f_fw-600'>{ledgerData?.ownerName}</h6>
           <div className="f_flex f_align-center f_content-end">
             <div className='f_ml-10'>
-              <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+              <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => handleDownloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
             </div>
             <div className='f_ml-10'>
-              <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
+              <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => handleDownloadFile()} ><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
             </div>
           </div></div>}
         okText="Save"

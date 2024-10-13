@@ -97,14 +97,14 @@ const Reminder = () => {
 
   useEffect(() => {
     if (selectedCompany?._id) {
-      setFilter({
+      setFilter((prevFilter) => ({
+        ...prevFilter,
         filter: {
           fileId: selectedCompany?._id
         },
-        ...filter
-      })
+      }));
     }
-  }, [selectedCompany])
+  }, [selectedCompany]);
 
   const fetchData = () => {
     const body = { ...filter }
@@ -347,7 +347,7 @@ const Reminder = () => {
     {
       title: <div className='f_flex f_align-center f_content-center'><span>EMI Type</span>
         <Popover placement="bottomRight" overlayClassName="f_common-popover" content={content()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedEmiTypes.length > 0 ? '#184ecf' : '#5e6782'}/></span>
+          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedEmiTypes.length > 0 ? '#184ecf' : '#5e6782'} /></span>
         </Popover></div>,
       dataIndex: 'emiType',
       className: 'f_text-center',
@@ -360,7 +360,7 @@ const Reminder = () => {
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Status</span>
         <Popover placement="bottomRight" overlayClassName="f_common-popover" content={ststusContent()} trigger="click">
-          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedStatus.length > 0 ? '#184ecf' : '#5e6782'}/></span>
+          <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' fill={selectedStatus.length > 0 ? '#184ecf' : '#5e6782'} /></span>
         </Popover></div>,
       id: "status",
       key: "status",
@@ -385,7 +385,13 @@ const Reminder = () => {
         return (
           <div className='f_flex f_align-center f_content-center'>
             <Tooltip placement="bottom" title={'Edit'}>
-              <span className="f_cp f_icon-small-hover f_flex f_align-center f_content-center" onClick={() => { setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props?._id); setSelctedPartyId(props?.partyId?._id) }}><F_EditIcon width='14px' height='14px' /></span>
+              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center ${props?.isPaid ? 'f_disabled' : ""}`} onClick={(e) => {
+                if (props?.isPaid) {
+                  e?.stopPropagation();
+                } else {
+                  setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props?._id); setSelctedPartyId(props?.partyId?._id)
+                }
+              }}><F_EditIcon width='14px' height='14px' /></span>
             </Tooltip>
           </div>
         )
@@ -543,9 +549,10 @@ const Reminder = () => {
     });
   };
 
-  const downloadFile = async (id, fileName) => {
+  const downloadFile = async (isPdf = false) => {
+    let url = !isPdf ? 'download-xls' : 'download-pdf';
     axios
-      .post(`${BASE_URL}/user/payment/download-xls`, filter, {
+      .post(`${BASE_URL}/user/payment/${url}`, filter, {
         responseType: "arraybuffer",
         headers: {
           Authorization: "Bearer " + UtilLocalService.getLocalStorage(TOKEN_KEY),
@@ -553,12 +560,12 @@ const Reminder = () => {
       })
       .then((response) => {
         var blob = new Blob([response.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type: isPdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "Reminder");
+        link.setAttribute("download", isPdf ? "Reminder.pdf" : "Reminder.xlsx");
         document.body.appendChild(link);
         link.click();
       });
@@ -607,7 +614,7 @@ const Reminder = () => {
         </div>
         <div className="f_flex f_align-center f_content-center">
           <div className='f_ml-10'>
-            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+            <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
           </div>
           <div className='f_ml-10'>
             <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
@@ -620,18 +627,18 @@ const Reminder = () => {
           dataSource={data}
           pagination={false}
           className='f_listing-antd-table'
-          // rowSelection={rowSelection}
-          // summary={() => (
-          //   <Table.Summary fixed>
-          //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
-          //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={8}>Total:</Table.Summary.Cell>
-          //       <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹ 10,000</span></Table.Summary.Cell>
-          //       <Table.Summary.Cell index={2}></Table.Summary.Cell>
-          //       <Table.Summary.Cell index={3}></Table.Summary.Cell>
-          //       <Table.Summary.Cell index={4}></Table.Summary.Cell>
-          //     </Table.Summary.Row>
-          //   </Table.Summary>
-          // )}
+        // rowSelection={rowSelection}
+        // summary={() => (
+        //   <Table.Summary fixed>
+        //     <Table.Summary.Row className='f_ant-table-summary-fixed'>
+        //       <Table.Summary.Cell className="f_text-right f_fw-600" index={0} colSpan={8}>Total:</Table.Summary.Cell>
+        //       <Table.Summary.Cell className="f_text-left f_fw-600" index={1}><span className='f_color-primary-500 f_ml-5'>₹ 10,000</span></Table.Summary.Cell>
+        //       <Table.Summary.Cell index={2}></Table.Summary.Cell>
+        //       <Table.Summary.Cell index={3}></Table.Summary.Cell>
+        //       <Table.Summary.Cell index={4}></Table.Summary.Cell>
+        //     </Table.Summary.Row>
+        //   </Table.Summary>
+        // )}
         />
       </div>
 
