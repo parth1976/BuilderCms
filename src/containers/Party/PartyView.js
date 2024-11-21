@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Tooltip, Table, Button, Row, Form, Input, Col, DatePicker, Pagination, Modal, Select, Checkbox, Popover, Tag } from "antd";
 import { F_BackArrowIcon, F_DeleteIcon, F_DownloadExcelIcon, F_DownloadPdfIcon, F_EditIcon, F_EyeIcon, F_FilterIcon, F_PlusIcon } from "../../Icons";
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL, PAYMENT_MODE, TENURE, TOKEN_KEY } from '../../constanats';
+import { BASE_URL, PAYMENT_MODE, PAYMENT_STATUS, TENURE, TOKEN_KEY, TRANSACTION_CONSTANTS } from '../../constanats';
 import UtilLocalService, { notify } from '../../utils/localServiceUtil';
 import { calculateEmi } from './caculateEmi';
 import { callAPI } from '../../utils/api';
@@ -26,13 +26,14 @@ const PartyView = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const optionsType = [
-    { value: 1, label: "Credit" },
-    { value: 2, label: "Debit" },
+    { value: TRANSACTION_CONSTANTS.CREDIT, label: "Credit" },
+    { value: TRANSACTION_CONSTANTS.DEBIT, label: "Debit" },
   ];
 
   const paymentMode = [
-    { value: 1, label: "Cheque" },
-    { value: 2, label: "Cash" },
+    { value: PAYMENT_MODE.CHAQUE, label: "Cheque" },
+    { value: PAYMENT_MODE.CASH, label: "Cash" },
+    { value: PAYMENT_MODE.ETRANSAFER, label: "E-Transfer" },
   ];
 
   useEffect(() => {
@@ -41,17 +42,7 @@ const PartyView = () => {
     setFinalHeight(mainHeight);
   }, [window?.location?.pathname]);
 
-  const handleFilterPopover = (data) => {
-    const content = (
-      <ul>
-        <li className="f_flex f_align-center f_cp"><Checkbox>Debit</Checkbox></li>
-        <li className="f_flex f_align-center f_cp"><Checkbox>Credit</Checkbox></li>
-        <li className="f_clear-filter f_cp">Clear</li>
-      </ul>
-    );
 
-    return content;
-  }
 
   const handleFilterPaymentPopover = (data) => {
     const content = (
@@ -131,19 +122,19 @@ const PartyView = () => {
 
   const findStatus = (code) => {
     let color, text, classname;
-    if (code === 2) {
+    if (code === PAYMENT_STATUS.ON_TIME) {
       text = 'On-Time';
       classname = 'ant-tag-success'
-    } else if (code === 4) {
+    } else if (code === PAYMENT_STATUS.OVERDUE) {
       text = 'Overdue';
       classname = "ant-tag-error"
-    } else if (code === 1) {
+    } else if (code === PAYMENT_STATUS.PENDING) {
       text = 'Pending';
       classname = "ant-tag-warning"
-    } else if (code === 3) {
+    } else if (code === PAYMENT_STATUS.ADVANCE) {
       text = 'Advanced';
       classname = "processing_tag"
-    }else if (code === 5) {
+    }else if (code === PAYMENT_STATUS.LATE_PAYED) {
       text = 'Late Paid';
       classname = "ant-tag-error"
     }
@@ -172,14 +163,15 @@ const PartyView = () => {
     },
     {
       title: <div className='f_flex f_align-center'><span>EMI Type</span>
-        <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterEmiTypePopover()} trigger="click">
+        {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterEmiTypePopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+        </Popover> */}
+        </div>,
       id: "emiType",
       key: "emiType",
       dataIndex: 'emiType',
       render: (emiType) => {
-        return emiType == 2 ? "Master" : "Regular";
+        return emiType == 3 ? "Down Payment" : emiType == 2 ? "Master" : "Regular";
       }
     },
     {
@@ -190,22 +182,25 @@ const PartyView = () => {
     },
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Transaction Type</span>
-        <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPopover()} trigger="click">
+
+        {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+        </Popover> */}
+        </div>,
       dataIndex: 'transactionType',
       id: 'transactionType',
       key: 'transactionType',
       className: 'f_text-center',
       render: (transactionType) => {
-        return transactionType == 1 ? "Credit" : transactionType == 2 ? "Debit" : "-";
+        return transactionType == TRANSACTION_CONSTANTS.CREDIT ? "Credit" : transactionType == TRANSACTION_CONSTANTS.DEBIT ? "Debit" : "-";
       }
     },
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Payment Mode</span>
-        <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPaymentPopover()} trigger="click">
+        {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPaymentPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+        </Popover> */}
+        </div>,
       dataIndex: 'paymentMode',
       id: 'paymentMode',
       key: 'paymentMode',
@@ -222,9 +217,10 @@ const PartyView = () => {
     },
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Status</span>
-        <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterStatusPopover()} trigger="click">
+        {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterStatusPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
-        </Popover></div>,
+        </Popover> */}
+        </div>,
       id: "status",
       key: "status",
       className: 'f_text-center',
@@ -248,17 +244,17 @@ const PartyView = () => {
         return (
           <div className='f_flex f_align-center f_content-center'>
             <Tooltip placement="bottom" title={'Edit'}>
-              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center f_mr-5 ${props?.isPaid ? 'f_disabled' : ""}`}
+              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center f_mr-5 ${(props?.isPaid && props?.emiType !== 3) ? 'f_disabled' : ""}`}
                onClick={(e) => { 
-                if(props?.isPaid){
+                if(props?.isPaid && props?.emiType !== 3){
                   e.stopPropagation();
                 }else{
-                  setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props?._id); }}
+                  setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props); }}
                 }
                 ><F_EditIcon width='14px' height='14px' /></span>
             </Tooltip>
             <Tooltip placement="bottom" title={'Delete'}>
-              <span className="f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_mr-5" onClick={() => { setDeleteConfirm(true); setSelctedPaymentId(props?._id); }}><F_DeleteIcon width='14px' height='14px' /></span>
+              <span className="f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_mr-5" onClick={() => { setDeleteConfirm(true); setSelctedPaymentId(props); }}><F_DeleteIcon width='14px' height='14px' /></span>
             </Tooltip>
           </div>
         )
@@ -300,10 +296,15 @@ const PartyView = () => {
   }
 
   const handlePaymentStatusUpdate = (values) => {
-    callAPI("PATCH", `${BASE_URL}/user/payment/${selectedPaymentId}`, { ...values, partyId, fileId: selectedCompany?._id })
+    if(selectedPaymentId.emiType == 3){
+      values.isPaid = true;
+    }
+    const body = { ...values, partyId, fileId: selectedCompany?._id}
+    callAPI("PATCH", `${BASE_URL}/user/payment/${selectedPaymentId._id}`, body)
       .then((res) => {
         if (res && res.code === "OK") {
           notify("success", "Payment status updated successfully");
+          fetchPartyDetails();
           fetchPartyEmis(); // Refresh the EMI list
           setIsVisibleModal(false)
         }
@@ -338,7 +339,7 @@ const PartyView = () => {
   const handlePaymentIdDelete = () => {
     const body = {
       partyId: partyId,
-      paymentIdArray: [selectedPaymentId]
+      paymentIdArray: [selectedPaymentId._id]
     }
     callAPI("POST", `${BASE_URL}/user/payment/delete`, body, {})
       .then((res) => {
@@ -430,32 +431,31 @@ const PartyView = () => {
                       label='Mobile No.'
                       name="mobileNumber"
                       className='f_mb-10 f_w-100'
-                      normalize={(value, prevValue) => {
-                        value = value?.trim();
-                        prevValue = prevValue?.trim();
-                        if (RegExp(/^[0-9]+$/).test(value)) {
-                          return value;
-                        }
-                        if (prevValue !== undefined && value !== '' && RegExp(/^[0-9]+$/).test(prevValue)) {
-                          return prevValue;
-                        }
-                        return null;
-                      }}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please enter mobile number.'
-                        },
-                        {
-                          len: 10,
-                          message: 'Mobile number should be of 10 digits.',
-                        }
-                      ]}
+                      // normalize={(value, prevValue) => {
+                      //   value = value?.trim();
+                      //   prevValue = prevValue?.trim();
+                      //   if (RegExp(/^[0-9]+$/).test(value)) {
+                      //     return value;
+                      //   }
+                      //   if (prevValue !== undefined && value !== '' && RegExp(/^[0-9]+$/).test(prevValue)) {
+                      //     return prevValue;
+                      //   }
+                      //   return null;
+                      // }}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: 'Please enter mobile number.'
+                      //   },
+                      //   {
+                      //     len: 10,
+                      //     message: 'Mobile number should be of 10 digits.',
+                      //   }
+                      // ]}
                     >
                       <Input
                         placeholder='Enter Your Mobile no.'
                         autoComplete='off'
-                        maxLength={10}
                       />
                     </Form.Item>
                     {/* <Tooltip title="Add Mobile" placement='bottom'><Button type='default' className='f_flex f_align-center f_content-center f_cp f_ml-10 f_mt-20'><F_PlusIcon width='14px' height='14px' fill='#7F72FF' /></Button></Tooltip> */}
@@ -765,7 +765,7 @@ const PartyView = () => {
       </div>
 
       {visibleModal && <Modal
-        title="Edit Add Payment Details"
+        title={selectedPaymentId ? "Edit Payment Details" : "Add Payment Details"}
         okText="Save"
         width="700px"
         open={visibleModal}
@@ -783,7 +783,7 @@ const PartyView = () => {
         }
         }
       >
-        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: 1, paymentMode: 2 }}>
+        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: TRANSACTION_CONSTANTS.CREDIT, paymentMode: PAYMENT_MODE.CASH }}>
           <Row gutter={10}>
             <Col span={8}>
               <Form.Item
@@ -797,6 +797,7 @@ const PartyView = () => {
                   listHeight={140}
                   placeholder="Select Transaction Type"
                   size="large"
+                  disabled = {selectedPaymentId.emiType === 3}
                 />
               </Form.Item>
             </Col>
@@ -825,10 +826,11 @@ const PartyView = () => {
                 <Input
                   placeholder='Enter Your Payment'
                   autoComplete='off'
+                  disabled = {selectedPaymentId.emiType === 3}
                 />
               </Form.Item>
             </Col>
-            {paymentModes == 1 && (<><Col span={8}>
+            {paymentModes == PAYMENT_MODE.CHAQUE && (<><Col span={8}>
               <Form.Item
                 label='Cheque no.'
                 name="cheque_number"
@@ -876,7 +878,7 @@ const PartyView = () => {
                   />
                 </Form.Item>
               </Col></>)}
-            <Col span={8}>
+            {selectedPaymentId.emiType !== 3 && <Col span={8}>
               <Form.Item
                 label='Collecting Date'
                 name="collectingDate"
@@ -887,7 +889,7 @@ const PartyView = () => {
                   className='f_w-100'
                 />
               </Form.Item>
-            </Col>
+            </Col>}
             <Col span={24}>
               <Form.Item
                 label='Narration'
@@ -904,7 +906,7 @@ const PartyView = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={24}>
+            {selectedPaymentId.emiType !== 3 && <Col span={24}>
               <Form.Item
                 name="isPaid" // This binds the form field to the checkbox
                 valuePropName="checked" // Ensure 'checked' is used for the checkbox value
@@ -912,7 +914,7 @@ const PartyView = () => {
               >
                 <Checkbox className='f_flex f_align-center' value={form2.getFieldsValue("isPaid")} onChange={(e) => form2.setFieldsValue({ isPaid: e.target.checked })}><span className='f_fs-16 f_fw-600'>Done</span></Checkbox>
               </Form.Item>
-            </Col>
+            </Col>}
           </Row>
         </Form>
       </Modal>}

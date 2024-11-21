@@ -3,7 +3,7 @@ import { Input, Tooltip, Table, Pagination, Checkbox, Tag, Popover, DatePicker, 
 import { F_DownloadExcelIcon, F_DownloadPdfIcon, F_EditIcon, F_FilterIcon } from "../../Icons";
 import { useSelector } from 'react-redux';
 import { callAPI } from '../../utils/api';
-import { BASE_URL, PAYMENT_STATUS, TOKEN_KEY } from '../../constanats';
+import { BASE_URL, PAYMENT_MODE, PAYMENT_STATUS, TOKEN_KEY, TRANSACTION_CONSTANTS } from '../../constanats';
 import UtilLocalService, { notify } from '../../utils/localServiceUtil';
 import moment from 'moment';
 import { render } from '@testing-library/react';
@@ -34,8 +34,8 @@ const Reminder = () => {
   const [selectedStatus, setSelectedStatus] = useState([]);
 
   const optionsType = [
-    { value: 1, label: "Credit" },
-    { value: 2, label: "Debit" },
+    { value: TRANSACTION_CONSTANTS.CREDIT, label: "Credit" },
+    { value: TRANSACTION_CONSTANTS.DEBIT, label: "Debit" },
   ];
 
   const paymentMode = [
@@ -100,7 +100,8 @@ const Reminder = () => {
       setFilter((prevFilter) => ({
         ...prevFilter,
         filter: {
-          fileId: selectedCompany?._id
+          fileId: selectedCompany?._id,
+          reminderDate: { startDate : moment().startOf('month').format("YYYY-MM-DD"), endDate :  moment().endOf('month').format("YYYY-MM-DD")},
         },
       }));
     }
@@ -412,7 +413,7 @@ const Reminder = () => {
     },
   };
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("currentMonth");
 
   const handleDateChangePopover = (option) => {
     let startDate, endDate;
@@ -436,13 +437,20 @@ const Reminder = () => {
         break;
     }
 
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      filter: {
-        ...prevFilter.filter,
-        reminderDate: startDate && endDate ? { startDate, endDate } : null,
-      },
-    }));
+    setFilter((prevFilter) => {
+      const updatedFilter = { ...prevFilter };
+      if (startDate && endDate) {
+        updatedFilter.filter = {
+          ...updatedFilter.filter,
+          reminderDate: { startDate, endDate },
+        };
+      } else {
+        if (updatedFilter.filter) {
+          delete updatedFilter.filter.reminderDate;
+        }
+      }
+      return updatedFilter;
+    });
   };
 
   const handleCheckboxChange = (type) => {
@@ -609,7 +617,7 @@ const Reminder = () => {
           </div>
           <div className='f_ml-10'>
             <Popover placement="bottom" overlayClassName="f_common-popover" content={handleFilterMonthPopover()} trigger="click">
-              <Tooltip title="Filter" placement='top'><span className='f_cp f_flex f_align-center f_content-center f_rollover-icon'><F_FilterIcon width='14px' height='14px' /></span></Tooltip>
+              <Tooltip title="Filter" placement='top'><span className='f_cp f_flex f_align-center f_content-center f_rollover-icon'><F_FilterIcon width='14px' height='14px' fill={selectedOption ? '#184ecf' : '#5e6782'}/></span></Tooltip>
             </Popover>
           </div>
         </div>
@@ -679,7 +687,7 @@ const Reminder = () => {
         }
         }
       >
-        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: 1, paymentMode: 2 }}>
+        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: TRANSACTION_CONSTANTS.CREDIT, paymentMode: PAYMENT_MODE.CASH }}>
           <Row gutter={10}>
             <Col span={8}>
               <Form.Item
@@ -724,7 +732,7 @@ const Reminder = () => {
                 />
               </Form.Item>
             </Col>
-            {paymentModes == 1 && (<><Col span={8}>
+            {paymentModes == PAYMENT_MODE.CHAQUE && (<><Col span={8}>
               <Form.Item
                 label='Cheque no.'
                 name="cheque_number"

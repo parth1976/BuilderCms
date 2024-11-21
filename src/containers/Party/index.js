@@ -153,7 +153,7 @@ const Party = () => {
       setTimeout(() => {
         setFilter((prevFilter) => ({
           ...prevFilter,
-          search: { keyword: search, keys: ['ownerName', 'houseNumber'] },
+          search: { keyword: search, keys: ['ownerName', 'houseNumber' , 'mobileNumber'] },
         }));
       }, 1000)
     );
