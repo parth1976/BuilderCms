@@ -8,6 +8,7 @@ import { calculateEmi } from './caculateEmi';
 import { callAPI } from '../../utils/api';
 import { useSelector } from 'react-redux';
 import { render } from '@testing-library/react';
+import moment from "moment";
 import axios from 'axios';
 
 const PartyView = () => {
@@ -215,7 +216,7 @@ const PartyView = () => {
       id: 'reminderDate',
       key: 'reminderDate',
       render: (x) => {
-        return x ? mmoment(x).format("DD-MM-YYYY") : "-";
+        return x ? moment(x).format("DD-MM-YYYY") : "-";
       }
     },
     {
