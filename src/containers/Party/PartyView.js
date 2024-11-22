@@ -211,9 +211,12 @@ const PartyView = () => {
     },
     {
       title: 'Collecting Date',
-      dataIndex: 'reminderDate',
+      dataIndex: 'collectingDate',
       id: 'reminderDate',
       key: 'reminderDate',
+      render: (x) => {
+        return x ? mmoment(x).format("DD-MM-YYYY") : "-";
+      }
     },
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Status</span>
