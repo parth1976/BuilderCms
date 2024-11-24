@@ -303,8 +303,9 @@ const PartyView = () => {
     if(selectedPaymentId.emiType == 3){
       values.isPaid = true;
     }
-    const body = { ...values, partyId, fileId: selectedCompany?._id}
-    callAPI("PATCH", `${BASE_URL}/user/payment/${selectedPaymentId._id}`, body)
+    const body = { ...values, partyId, fileId: selectedCompany?._id , payment : Number(values.payment)}
+    const url = selectedPaymentId ? `user/payment/${selectedPaymentId._id}` : `user/payment/create-payment`
+    callAPI(selectedPaymentId ? "PATCH" : "POST", `${BASE_URL}/${url}`, body)
       .then((res) => {
         if (res && res.code === "OK") {
           notify("success", "Payment status updated successfully");

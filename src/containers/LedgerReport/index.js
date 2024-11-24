@@ -96,6 +96,7 @@ const LedgerReport = () => {
         // Make API call to get the options
         callAPI("POST", `${BASE_URL}/user/party/paginate`, {
           search: { keyword: search, keys: ["ownerName", "houseNumber"] },
+          filter: {fileId : selectedCompany?._id}
         }).then((response) => {
           // Assuming response contains data in the format [{ _id: value, name: label }]
           if (response && response.data) {
