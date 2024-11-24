@@ -252,7 +252,7 @@ const CashAccount = () => {
       });
   }
 
-  
+
   function cleanObject(data) {
     // Create a new object by filtering out keys where the value is either "" or null
     const cleanedData = Object.keys(data).reduce((acc, key) => {
@@ -261,7 +261,7 @@ const CashAccount = () => {
       }
       return acc;
     }, {});
-  
+
     return cleanedData;
   }
 
@@ -354,7 +354,7 @@ const CashAccount = () => {
               }}><F_EditIcon width='14px' height='14px' /></span>
             </Tooltip>
             <Tooltip placement="bottom" title={'Delete'}>
-              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center ${props?.partyId?.isStaff ? "" : "f_disabled"}`} onClick={() => {if (props?.partyId?.isStaff) { setSelectedPartyId(props?._id); setDeleteConfirm(true) }}}><F_DeleteIcon width='14px' height='14px' /></span>
+              <span className={`f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_ml-5 ${!props?.partyId?.isStaff ? 'f_disabled' : ''}`} onClick={() => { if (props?.partyId?.isStaff) { setSelectedPartyId(props?._id); setDeleteConfirm(true) } }}><F_DeleteIcon width='14px' height='14px' /></span>
             </Tooltip>
           </div>
         )
