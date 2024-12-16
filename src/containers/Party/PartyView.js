@@ -8,6 +8,7 @@ import { calculateEmi } from './caculateEmi';
 import { callAPI } from '../../utils/api';
 import { useSelector } from 'react-redux';
 import { render } from '@testing-library/react';
+import moment from "moment";
 import axios from 'axios';
 
 const PartyView = () => {
@@ -211,9 +212,12 @@ const PartyView = () => {
     },
     {
       title: 'Collecting Date',
-      dataIndex: 'reminderDate',
+      dataIndex: 'collectingDate',
       id: 'reminderDate',
       key: 'reminderDate',
+      render: (x) => {
+        return x ? moment(x).format("DD-MM-YYYY") : "-";
+      }
     },
     {
       title: <div className='f_flex f_align-center f_content-center'><span>Status</span>
@@ -299,8 +303,9 @@ const PartyView = () => {
     if(selectedPaymentId.emiType == 3){
       values.isPaid = true;
     }
-    const body = { ...values, partyId, fileId: selectedCompany?._id}
-    callAPI("PATCH", `${BASE_URL}/user/payment/${selectedPaymentId._id}`, body)
+    const body = { ...values, partyId, fileId: selectedCompany?._id , payment : Number(values.payment)}
+    const url = selectedPaymentId ? `user/payment/${selectedPaymentId._id}` : `user/payment/create-payment`
+    callAPI(selectedPaymentId ? "PATCH" : "POST", `${BASE_URL}/${url}`, body)
       .then((res) => {
         if (res && res.code === "OK") {
           notify("success", "Payment status updated successfully");

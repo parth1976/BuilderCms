@@ -34,6 +34,7 @@ const CashAccount = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [selectedPartyId, setSelectedPartyId] = useState('')
   const [counts, setCounts] = useState('')
+  const [selectedAccountId, setSelectedAccountId] = useState('')
   const transOptions = [
     { value: 2, label: "Credit" },
     { value: 1, label: "Debit" },
@@ -142,7 +143,7 @@ const CashAccount = () => {
   const fetchPartyData = () => {
     callAPI("POST", `${BASE_URL}/user/party/paginate`, { filter: { fileId: selectedCompany?._id, isStaff: [true, false] } })
       .then((res) => {
-        const transformedData = res.data.list.map((item) => ({
+        const transformedData = res.data.list.filter((x) => x?.isStaff).map((item) => ({
           label: item.ownerName, // assuming `name` is the correct key for the label
           value: item._id   // assuming `_id` is the key for the value
         }));
@@ -190,6 +191,7 @@ const CashAccount = () => {
         // Make API call to get the options
         callAPI("POST", `${BASE_URL}/user/party/paginate`, {
           search: { keyword: search, keys: ["ownerName", "houseNumber"] },
+          filter: { fileId: selectedCompany?._id }
         }).then((response) => {
           // Assuming response contains data in the format [{ _id: value, name: label }]
           if (response && response.data) {
@@ -250,9 +252,23 @@ const CashAccount = () => {
       });
   }
 
+
+  function cleanObject(data) {
+    // Create a new object by filtering out keys where the value is either "" or null
+    const cleanedData = Object.keys(data).reduce((acc, key) => {
+      if (data[key] !== "" && data[key] !== null) {
+        acc[key] = data[key];
+      }
+      return acc;
+    }, {});
+
+    return cleanedData;
+  }
+
   const handleCreatePayment = (values) => {
-    callAPI("POST", `${BASE_URL}/user/account/create-account`, {
-      ...values,
+    const url = selectedAccountId ? `${BASE_URL}/user/account/${selectedAccountId}` : `${BASE_URL}/user/account/create-account`
+    callAPI(selectedAccountId ? "PATCH" : "POST", url, {
+      ...cleanObject(values),
       fileId: selectedCompany?._id,
       type: TYPE_CONSTANTS.CASH
     })
@@ -260,6 +276,7 @@ const CashAccount = () => {
         if (res && res.code === "OK") {
           form2.resetFields();
           setIsVisibleModal(false);
+          setSelectedAccountId('')
           notify("success", res?.message);
           fetchData();
         }
@@ -327,8 +344,17 @@ const CashAccount = () => {
       render: (x, props, index) => {
         return (
           <div className='f_flex f_align-center f_content-center'>
+            <Tooltip placement="bottom" title={'Edit'}>
+              <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center ${props?.partyId?.isStaff ? "" : "f_disabled"}`} onClick={() => {
+                if (props?.partyId?.isStaff) {
+                  setSelectedAccountId(props?._id)
+                  form2.setFieldsValue({ ...props, date: props?.date ? moment(props?.date) : null, partyId: props?.partyId?._id })
+                  setIsVisibleModal(true)
+                }
+              }}><F_EditIcon width='14px' height='14px' /></span>
+            </Tooltip>
             <Tooltip placement="bottom" title={'Delete'}>
-              <span className="f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_ml-5" onClick={() => { setSelectedPartyId(props?._id); setDeleteConfirm(true) }}><F_DeleteIcon width='14px' height='14px' /></span>
+              <span className={`f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_ml-5 ${!props?.partyId?.isStaff ? 'f_disabled' : ''}`} onClick={() => { if (props?.partyId?.isStaff) { setSelectedPartyId(props?._id); setDeleteConfirm(true) } }}><F_DeleteIcon width='14px' height='14px' /></span>
             </Tooltip>
           </div>
         )
@@ -475,7 +501,7 @@ const CashAccount = () => {
 
 
       {visibleModal && <Modal
-        title="Add OR Edit Details"
+        title="Cash Details"
         okText="Save"
         width="700px"
         open={visibleModal}
