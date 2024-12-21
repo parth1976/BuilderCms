@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { render } from '@testing-library/react';
 import moment from "moment";
 import axios from 'axios';
+import DownloadInvoice from './DownloadInvoice';
 
 const PartyView = () => {
   const [finalHeight, setFinalHeight] = useState("");
@@ -25,7 +26,7 @@ const PartyView = () => {
   const paymentModes = Form.useWatch("paymentMode", form2); // Watch paymentMode value
   const [selectedPaymentId, setSelctedPaymentId] = useState("")
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-
+  const [partyData, setPartyData] = useState('')
   const optionsType = [
     { value: TRANSACTION_CONSTANTS.CREDIT, label: "Credit" },
     { value: TRANSACTION_CONSTANTS.DEBIT, label: "Debit" },
@@ -98,6 +99,7 @@ const PartyView = () => {
   const fetchPartyDetails = () => {
     callAPI("GET", `${BASE_URL}/user/party/${partyId}`)
       .then((res) => {
+        setPartyData(res?.data)
         form.setFieldsValue(res?.data);
       })
       .catch((err) => {
@@ -135,7 +137,7 @@ const PartyView = () => {
     } else if (code === PAYMENT_STATUS.ADVANCE) {
       text = 'Advanced';
       classname = "processing_tag"
-    }else if (code === PAYMENT_STATUS.LATE_PAYED) {
+    } else if (code === PAYMENT_STATUS.LATE_PAYED) {
       text = 'Late Paid';
       classname = "ant-tag-error"
     }
@@ -161,13 +163,16 @@ const PartyView = () => {
       dataIndex: 'reminderDate',
       id: 'reminderDate',
       key: 'reminderDate',
+      render: (x) => (
+        <span>{x ? moment(x).format('DD-MM-YYYY') : '-'}</span>
+      )
     },
     {
       title: <div className='f_flex f_align-center'><span>EMI Type</span>
         {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterEmiTypePopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
         </Popover> */}
-        </div>,
+      </div>,
       id: "emiType",
       key: "emiType",
       dataIndex: 'emiType',
@@ -187,7 +192,7 @@ const PartyView = () => {
         {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
         </Popover> */}
-        </div>,
+      </div>,
       dataIndex: 'transactionType',
       id: 'transactionType',
       key: 'transactionType',
@@ -201,7 +206,7 @@ const PartyView = () => {
         {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterPaymentPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
         </Popover> */}
-        </div>,
+      </div>,
       dataIndex: 'paymentMode',
       id: 'paymentMode',
       key: 'paymentMode',
@@ -224,7 +229,7 @@ const PartyView = () => {
         {/* <Popover placement="bottomRight" overlayClassName="f_common-popover" content={handleFilterStatusPopover()} trigger="click">
           <span className='f_cp f_ml-5 f_flex f_align-center f_content-center'><F_FilterIcon width='14px' height='14px' /></span>
         </Popover> */}
-        </div>,
+      </div>,
       id: "status",
       key: "status",
       className: 'f_text-center',
@@ -249,13 +254,21 @@ const PartyView = () => {
           <div className='f_flex f_align-center f_content-center'>
             <Tooltip placement="bottom" title={'Edit'}>
               <span className={`f_cp f_icon-small-hover f_flex f_align-center f_content-center f_mr-5 ${(props?.isPaid && props?.emiType !== 3) ? 'f_disabled' : ""}`}
-               onClick={(e) => { 
-                if(props?.isPaid && props?.emiType !== 3){
-                  e.stopPropagation();
-                }else{
-                  setIsVisibleModal(true); form2.setFieldsValue({ payment: props?.payment }); setSelctedPaymentId(props); }}
+                onClick={(e) => {
+                  if (props?.isPaid && props?.emiType !== 3) {
+                    e.stopPropagation();
+                  } else {
+                    setIsVisibleModal(true);
+                    form2.setFieldsValue({
+                      ...props,
+                      collectingDate: props.collectingDate ? moment(props.collectingDate) : null,
+                      cheque_date : props.cheque_date ? moment(props.cheque_date) : null
+                    });
+                    setSelctedPaymentId(props);
+                  }
                 }
-                ><F_EditIcon width='14px' height='14px' /></span>
+                }
+              ><F_EditIcon width='14px' height='14px' /></span>
             </Tooltip>
             <Tooltip placement="bottom" title={'Delete'}>
               <span className="f_cp f_icon-small-hover f_icon-small-hover-delete f_flex f_align-center f_content-center f_mr-5" onClick={() => { setDeleteConfirm(true); setSelctedPaymentId(props); }}><F_DeleteIcon width='14px' height='14px' /></span>
@@ -300,10 +313,10 @@ const PartyView = () => {
   }
 
   const handlePaymentStatusUpdate = (values) => {
-    if(selectedPaymentId.emiType == 3){
+    if (selectedPaymentId.emiType == 3) {
       values.isPaid = true;
     }
-    const body = { ...values, partyId, fileId: selectedCompany?._id , payment : Number(values.payment)}
+    const body = { ...values, partyId, fileId: selectedCompany?._id, payment: Number(values.payment) }
     const url = selectedPaymentId ? `user/payment/${selectedPaymentId._id}` : `user/payment/create-payment`
     callAPI(selectedPaymentId ? "PATCH" : "POST", `${BASE_URL}/${url}`, body)
       .then((res) => {
@@ -436,27 +449,27 @@ const PartyView = () => {
                       label='Mobile No.'
                       name="mobileNumber"
                       className='f_mb-10 f_w-100'
-                      // normalize={(value, prevValue) => {
-                      //   value = value?.trim();
-                      //   prevValue = prevValue?.trim();
-                      //   if (RegExp(/^[0-9]+$/).test(value)) {
-                      //     return value;
-                      //   }
-                      //   if (prevValue !== undefined && value !== '' && RegExp(/^[0-9]+$/).test(prevValue)) {
-                      //     return prevValue;
-                      //   }
-                      //   return null;
-                      // }}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: 'Please enter mobile number.'
-                      //   },
-                      //   {
-                      //     len: 10,
-                      //     message: 'Mobile number should be of 10 digits.',
-                      //   }
-                      // ]}
+                    // normalize={(value, prevValue) => {
+                    //   value = value?.trim();
+                    //   prevValue = prevValue?.trim();
+                    //   if (RegExp(/^[0-9]+$/).test(value)) {
+                    //     return value;
+                    //   }
+                    //   if (prevValue !== undefined && value !== '' && RegExp(/^[0-9]+$/).test(prevValue)) {
+                    //     return prevValue;
+                    //   }
+                    //   return null;
+                    // }}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: 'Please enter mobile number.'
+                    //   },
+                    //   {
+                    //     len: 10,
+                    //     message: 'Mobile number should be of 10 digits.',
+                    //   }
+                    // ]}
                     >
                       <Input
                         placeholder='Enter Your Mobile no.'
@@ -536,6 +549,71 @@ const PartyView = () => {
                       placeholder='Enter Your Payment'
                       autoComplete='off'
                       type='number'
+                      disabled={partyId}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24} sm={12} md={6} xl={6} xxl={4}>
+                  <Form.Item
+                    label='house size'
+                    name="houseSize"
+                    className='f_mb-10'
+                  >
+                    <Input
+                      placeholder='Enter Your houseSize'
+                      autoComplete='off'
+                      disabled={partyId}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24} sm={12} md={6} xl={6} xxl={4}>
+                  <Form.Item
+                    label='Sq Rate'
+                    name="sqRate"
+                    className='f_mb-10'
+                  >
+                    <Input
+                      placeholder='Enter Your Sq Rate'
+                      autoComplete='off'
+                      disabled={partyId}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24} sm={12} md={6} xl={6} xxl={4}>
+                  <Form.Item
+                    label='Village'
+                    name="village"
+                    className='f_mb-10'
+                  >
+                    <Input
+                      placeholder='Enter Your village'
+                      autoComplete='off'
+                      disabled={partyId}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24} sm={12} md={6} xl={6} xxl={4}>
+                  <Form.Item
+                    label='District'
+                    name="district"
+                    className='f_mb-10'
+                  >
+                    <Input
+                      placeholder='Enter Your district'
+                      autoComplete='off'
+                      disabled={partyId}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={24} sm={12} md={6} xl={6} xxl={4}>
+                  <Form.Item
+                    label='City'
+                    name="city"
+                    className='f_mb-10'
+                  >
+                    <Input
+                      placeholder='Enter Your city'
+                      autoComplete='off'
                       disabled={partyId}
                     />
                   </Form.Item>
@@ -742,7 +820,10 @@ const PartyView = () => {
                 <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
               </div>
               <div className='f_ml-10'>
-                <Tooltip title="Download Excel" placement='bottom' oncl><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
+                <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
+              </div>
+              <div className='f_ml-10'>
+                <DownloadInvoice emiData={data} partyData={partyData} />
               </div>
             </div>
           </div>
@@ -788,7 +869,7 @@ const PartyView = () => {
         }
         }
       >
-        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: TRANSACTION_CONSTANTS.CREDIT, paymentMode: PAYMENT_MODE.CASH }}>
+        <Form layout="vertical" size='large' form={form2} initialValues={{ transactionType: TRANSACTION_CONSTANTS.CREDIT, paymentMode: PAYMENT_MODE.CASH, isPaid: false }}>
           <Row gutter={10}>
             <Col span={8}>
               <Form.Item
@@ -802,7 +883,7 @@ const PartyView = () => {
                   listHeight={140}
                   placeholder="Select Transaction Type"
                   size="large"
-                  disabled = {selectedPaymentId.emiType === 3}
+                  disabled={selectedPaymentId.emiType === 3}
                 />
               </Form.Item>
             </Col>
@@ -831,7 +912,7 @@ const PartyView = () => {
                 <Input
                   placeholder='Enter Your Payment'
                   autoComplete='off'
-                  disabled = {selectedPaymentId.emiType === 3}
+                  disabled={selectedPaymentId.emiType === 3}
                 />
               </Form.Item>
             </Col>

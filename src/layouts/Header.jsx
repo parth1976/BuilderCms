@@ -23,11 +23,12 @@ import {
   F_UserIcon,
 } from "../Icons";
 import { useDispatch, useSelector } from "react-redux";
-import { callAPI } from "../utils/api";
+import { callAPI, logoutClear } from "../utils/api";
 import { BASE_URL } from "../constanats";
 import { setSelectedCompanyData } from "../reducers/files";
-import { setAuthUser } from "../reducers/auth";
-import UtilLocalService from "../utils/localServiceUtil";
+import { logout, setAuthUser } from "../reducers/auth";
+import UtilLocalService, { notify } from "../utils/localServiceUtil";
+import { useForm } from "antd/es/form/Form";
 
 const Header = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -36,6 +37,7 @@ const Header = () => {
   const authUser = useSelector((state) => state.auth.authUser);
   const [companyOptions, setCompanyOptions] = useState([])
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const options = [
     { value: "Parth", label: "Parth" },
     { value: "Vijay", label: "Vijay" },
@@ -65,7 +67,9 @@ const Header = () => {
         <F_ChangePasswordIcon width="14px" height="14px" className="f_mr-5" />
         Change Password
       </li>
-      <li className="f_flex f_align-center f_cp f_clear-filter">
+      <li className="f_flex f_align-center f_cp f_clear-filter"
+        onClick={() => logoutClear()}
+      >
         <F_LogoutIcon
           fill="#d1293d"
           width="14px"
@@ -248,32 +252,32 @@ const Header = () => {
         <Modal
           title="Changes Password"
           okText="Change Password"
+          onOk={() => {
+            callAPI('POST', `${BASE_URL}/auth/change-password`, { ...form.getFieldsValue() })
+              .then((res) => {
+                if (res && res.code == "OK") {
+                  notify('success', res?.message)
+                  setIsVisibleChangesPwdModal(false)
+                  setTimeout(() => {
+                    logoutClear();
+                  }, 1000);
+                }
+              })
+              .catch((err) => {
+                notify('error', err?.message)
+              })
+          }}
           width="500px"
           open={visibleChangesPwdModal}
           cancelText="Cancel"
           onCancel={() => setIsVisibleChangesPwdModal(false)}
         >
-          <Form layout="vertical" size="large" autoComplete="off">
+          <Form layout="vertical" size="large" autoComplete="off" form={form}>
             <Row gutter={10}>
               <Col span={24}>
                 <Form.Item
                   className="label f_mb-10"
                   label="Current Password"
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter Current password.",
-                    },
-                  ]}
-                >
-                  <Input.Password placeholder="Enter Current password" />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item
-                  className="label f_mb-10"
-                  label="New Password"
                   name="password"
                   rules={[
                     {
@@ -288,8 +292,8 @@ const Header = () => {
               <Col span={24}>
                 <Form.Item
                   className="label f_mb-0"
-                  label="Confirm Password"
-                  name="password"
+                  label="New Password"
+                  name="newPassword"
                   rules={[
                     {
                       required: true,
