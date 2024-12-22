@@ -25,24 +25,28 @@ const DebitvsCredit = () => {
   }, [selectedCompany]);
 
   const transformChartData = (data) => {
-    const transformedData = [];
-
-    data.forEach((item) => {
-      transformedData.push(
+    const transformedData = data.map((item) => {
+      // Construct period if it's 'Unknown' or null
+      const period = item.period === 'Unknown' || !item.period
+      ? item._id.month ? `${item._id.month}-${item._id.year}` : `${item._id.year}`
+      : item.period;
+        
+      return [
         {
-          period: item.period,
+          period,
           type: 'totalDebit',
           value: item.totalDebit,
         },
         {
-          period: item.period,
+          period,
           type: 'totalCredit',
           value: item.totalCredit,
         }
-      );
+      ];
     });
-
-    return transformedData;
+  
+    // Flatten the array of arrays
+    return transformedData.flat();
   };
 
 

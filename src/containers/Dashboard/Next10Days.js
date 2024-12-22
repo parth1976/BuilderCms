@@ -123,9 +123,10 @@ const Next10Days = () => {
     // },
   ]
 
-  const downloadFile = async (id, fileName) => {
+  const downloadFile = async (isPdf = false) => {
+    let url = !isPdf ? 'download-xls' : 'download-pdf';
     axios
-      .post(`${BASE_URL}/user/payment/download-xls`, filter , {
+      .post(`${BASE_URL}/user/payment/${url}`, filter, {
         responseType: "arraybuffer",
         headers: {
           Authorization: "Bearer " + UtilLocalService.getLocalStorage(TOKEN_KEY),
@@ -133,12 +134,12 @@ const Next10Days = () => {
       })
       .then((response) => {
         var blob = new Blob([response.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type: isPdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "Reminder");
+        link.setAttribute("download", isPdf ? "Reminder.pdf" : "Reminder.xlsx");
         document.body.appendChild(link);
         link.click();
       });
@@ -156,7 +157,7 @@ const Next10Days = () => {
           </div>
           <div className='f_flex f_align-center f_content-end'>
             <div className='f_ml-10'>
-              <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
+              <Tooltip title="Download PDF" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon'onClick={() => downloadFile(true)}><F_DownloadPdfIcon width='14px' height='14px' /></span></Tooltip>
             </div>
             <div className='f_ml-10'>
               <Tooltip title="Download Excel" placement='bottom'><span className='f_flex f_align-center f_content-center f_cp f_rollover-icon' onClick={() => downloadFile()}><F_DownloadExcelIcon width='14px' height='14px' /></span></Tooltip>
